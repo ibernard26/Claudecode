@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { Link } from "wouter";
 
 export default function Exceptions() {
-  const { data: exceptions, isLoading } = useListExceptions();
+  const { data: exceptions, isLoading } = useListExceptions(undefined, { query: { refetchInterval: 60_000 } });
   const recompute = useRecomputeExceptions();
   const queryClient = useQueryClient();
 

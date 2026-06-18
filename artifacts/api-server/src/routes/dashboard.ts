@@ -117,6 +117,9 @@ router.get("/dashboard/overview", requireUser(), async (req, res) => {
         .orderBy(desc(auditLogsTable.createdAt))
         .limit(20);
 
+  const statusCounts = new Map(byStatusRows.map((r) => [r.status, r.count]));
+  const sc = (s: string) => statusCounts.get(s) ?? 0;
+
   res.json({
     totalItems,
     belowReorder: belowReorderRow[0]?.count ?? 0,
@@ -124,13 +127,13 @@ router.get("/dashboard/overview", requireUser(), async (req, res) => {
     criticalExceptions: criticalFlagsRow[0]?.count ?? 0,
     pendingSupplier: supplierActions[0]?.count ?? 0,
     pendingClient: clientActions[0]?.count ?? 0,
-    backordered: 0,
-    delayed: 0,
-    readyForPicking: 0,
-    readyForPacking: 0,
-    readyForStaging: 0,
-    readyForLoading: 0,
-    readyForShipment: 0,
+    backordered: sc("Backordered"),
+    delayed: sc("Delayed"),
+    readyForPicking: sc("ReadyForPicking"),
+    readyForPacking: sc("ReadyForPacking"),
+    readyForStaging: sc("ReadyForStaging"),
+    readyForLoading: sc("ReadyForLoading"),
+    readyForShipment: sc("ReadyForShipment"),
     statusBreakdown: byStatusRows,
     lastSync,
     nextSync,

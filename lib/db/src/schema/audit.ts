@@ -4,6 +4,7 @@ import {
   integer,
   text,
   timestamp,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const auditLogsTable = pgTable("audit_logs", {
@@ -22,7 +23,10 @@ export const auditLogsTable = pgTable("audit_logs", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
-});
+}, (t) => ({
+  itemIdIdx: index("audit_logs_item_id_idx").on(t.itemId),
+  createdAtIdx: index("audit_logs_created_at_idx").on(t.createdAt),
+}));
 
 export type AuditLog = typeof auditLogsTable.$inferSelect;
 export type InsertAuditLog = typeof auditLogsTable.$inferInsert;

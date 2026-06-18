@@ -62,11 +62,24 @@ router.get("/inventory", requireUser(), async (req, res) => {
     );
   }
 
-  const items = await db
-    .select()
-    .from(inventoryItemsTable)
-    .where(combineFilters(...filters) ?? sql`true`)
-    .orderBy(inventoryItemsTable.sku);
+  const limit = Math.min(numParam(req.query["limit"]) ?? 100, 500);
+  const offset = numParam(req.query["offset"]) ?? 0;
+  const whereClause = combineFilters(...filters) ?? sql`true`;
+
+  const [items, totalRow] = await Promise.all([
+    db
+      .select()
+      .from(inventoryItemsTable)
+      .where(whereClause)
+      .orderBy(inventoryItemsTable.sku)
+      .limit(limit)
+      .offset(offset),
+    db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(inventoryItemsTable)
+      .where(whereClause),
+  ]);
+  const total = totalRow[0]?.count ?? 0;
 
   const flagCounts = await db
     .select({
@@ -78,7 +91,12 @@ router.get("/inventory", requireUser(), async (req, res) => {
     .groupBy(complianceFlagsTable.itemId);
   const flagMap = new Map(flagCounts.map((f) => [f.itemId, f.count]));
 
-  res.json(items.map((it) => serializeListItem(it, flagMap.get(it.id) ?? 0)));
+  res.json({
+    items: items.map((it) => serializeListItem(it, flagMap.get(it.id) ?? 0)),
+    total,
+    limit,
+    offset,
+  });
 });
 
 router.get("/inventory/:id", requireUser(), async (req, res) => {

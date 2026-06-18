@@ -80,10 +80,10 @@ export default function Capacity() {
   const { data: session } = useGetCurrentUser();
   const user = session?.user;
 
-  const { data: board, isLoading } = useGetCapacityBoard({
-    weekStart,
-    ...(warehouseId != null ? { warehouseId } : {}),
-  });
+  const { data: board, isLoading } = useGetCapacityBoard(
+    { weekStart, ...(warehouseId != null ? { warehouseId } : {}) },
+    { query: { refetchInterval: 60_000 } },
+  );
   const { data: items } = useListInventory();
 
   const queryClient = useQueryClient();

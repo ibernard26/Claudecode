@@ -5,6 +5,7 @@ import {
   text,
   date,
   timestamp,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const dockSlotsTable = pgTable("dock_slots", {
@@ -38,7 +39,10 @@ export const slotReservationsTable = pgTable("slot_reservations", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
-});
+}, (t) => ({
+  slotIdIdx: index("slot_reservations_slot_id_idx").on(t.slotId),
+  weekStartIdx: index("slot_reservations_week_start_idx").on(t.weekStart),
+}));
 
 export type DockSlot = typeof dockSlotsTable.$inferSelect;
 export type InsertDockSlot = typeof dockSlotsTable.$inferInsert;

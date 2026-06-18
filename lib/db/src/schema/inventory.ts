@@ -5,6 +5,7 @@ import {
   integer,
   timestamp,
   date,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const inventoryItemsTable = pgTable("inventory_items", {
@@ -39,7 +40,11 @@ export const inventoryItemsTable = pgTable("inventory_items", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
-});
+}, (t) => ({
+  statusIdx: index("inventory_items_status_idx").on(t.status),
+  supplierIdx: index("inventory_items_supplier_id_idx").on(t.supplierId),
+  clientIdx: index("inventory_items_client_id_idx").on(t.clientId),
+}));
 
 export type InventoryItem = typeof inventoryItemsTable.$inferSelect;
 export type InsertInventoryItem = typeof inventoryItemsTable.$inferInsert;

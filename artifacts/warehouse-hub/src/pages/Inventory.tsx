@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import {
-  useListInventory,
   useListClients,
   useListSuppliers,
   useListWarehouses,
@@ -18,7 +18,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Download, Package } from "lucide-react";
+import { Search, Download, Package, ChevronLeft, ChevronRight } from "lucide-react";
+
+const PAGE_SIZE = 100;
 
 export function getStatusColor(status: string) {
   const s = status.toLowerCase();
@@ -33,13 +35,38 @@ export default function Inventory() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("all");
   const [quarter, setQuarter] = useState<string>("all");
+  const [page, setPage] = useState(0);
   const [, setLocation] = useLocation();
 
-  const { data: inventory, isLoading } = useListInventory({
-    search: search || undefined,
-    status: status !== "all" ? status : undefined,
-    quarter: quarter !== "all" ? quarter : undefined,
+  useEffect(() => { setPage(0); }, [search, status, quarter]);
+
+  const { data: inventoryData, isLoading } = useQuery({
+    queryKey: ["inventory", { search, status, quarter, page }],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (search) params.set("search", search);
+      if (status !== "all") params.set("status", status);
+      if (quarter !== "all") params.set("quarter", quarter);
+      params.set("limit", String(PAGE_SIZE));
+      params.set("offset", String(page * PAGE_SIZE));
+      const res = await fetch(`/api/inventory?${params}`);
+      if (!res.ok) throw new Error("Failed to fetch inventory");
+      return res.json() as Promise<{
+        items: Array<{
+          id: number; sku: string; partNumber: string | null; description: string;
+          quantityOnHand: number; quantityRequested: number; reorderPoint: number;
+          status: string; priority: string | null; quarter: string; year: number;
+          supplierId: number | null; clientId: number | null; warehouseId: number;
+          warehouseLocation: string | null; openExceptionCount: number; lastUpdated: string;
+        }>;
+        total: number; limit: number; offset: number;
+      }>;
+    },
   });
+
+  const inventory = inventoryData?.items ?? [];
+  const total = inventoryData?.total ?? 0;
+  const totalPages = Math.ceil(total / PAGE_SIZE);
 
   const { data: clients } = useListClients();
   const { data: suppliers } = useListSuppliers();
@@ -188,6 +215,37 @@ export default function Inventory() {
           </Table>
         </div>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-2">
+          <p className="text-sm text-muted-foreground">
+            Showing {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total} items
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Prev
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              Page {page + 1} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={page >= totalPages - 1}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

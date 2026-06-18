@@ -6,7 +6,23 @@ import { writeAudit } from "../lib/audit";
 
 const router: IRouter = Router();
 
+const loginAttempts = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+
 router.post("/auth/login", async (req, res) => {
+  const ip = (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0].trim() ?? req.ip ?? "unknown";
+  const now = Date.now();
+  const entry = loginAttempts.get(ip);
+  if (entry && now < entry.resetAt) {
+    if (entry.count >= RATE_LIMIT_MAX) {
+      res.status(429).json({ error: "Too many login attempts. Please try again later." });
+      return;
+    }
+    entry.count += 1;
+  } else {
+    loginAttempts.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+  }
   const { username, password } = req.body ?? {};
   if (typeof username !== "string" || typeof password !== "string") {
     res.status(400).json({ error: "username and password required" });

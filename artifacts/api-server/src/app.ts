@@ -27,7 +27,10 @@ app.use(
     },
   }),
 );
-app.use(cors({ origin: true, credentials: true }));
+const allowedOrigin: string | boolean | RegExp =
+  process.env["CORS_ORIGIN"] ??
+  (process.env["NODE_ENV"] === "production" ? /\.replit\.dev$/ : true);
+app.use(cors({ origin: allowedOrigin, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);

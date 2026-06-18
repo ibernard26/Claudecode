@@ -10,7 +10,7 @@ import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
 
 export default function Dashboard() {
-  const { data: dashboard, isLoading } = useGetDashboardOverview();
+  const { data: dashboard, isLoading } = useGetDashboardOverview(undefined, { query: { refetchInterval: 60_000 } });
 
   if (isLoading) {
     return <div className="p-4">Loading dashboard...</div>;

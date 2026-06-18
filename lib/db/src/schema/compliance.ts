@@ -5,6 +5,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const complianceFlagsTable = pgTable(
@@ -22,10 +23,9 @@ export const complianceFlagsTable = pgTable(
     resolvedAt: timestamp("resolved_at", { withTimezone: true }),
   },
   (t) => ({
-    uniqOpen: uniqueIndex("compliance_flags_item_code_uniq").on(
-      t.itemId,
-      t.code,
-    ),
+    uniqOpen: uniqueIndex("compliance_flags_item_code_uniq").on(t.itemId, t.code),
+    itemIdIdx: index("compliance_flags_item_id_idx").on(t.itemId),
+    resolvedAtIdx: index("compliance_flags_resolved_at_idx").on(t.resolvedAt),
   }),
 );
 
