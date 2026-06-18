@@ -1,0 +1,1351 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Warehouse Coordination Hub API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+  - name: auth
+  - name: dashboard
+  - name: inventory
+  - name: packaging
+  - name: notes
+  - name: planning
+  - name: audit
+  - name: integrations
+  - name: exceptions
+  - name: directory
+  - name: export
+  - name: capacity
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /auth/me:
+    get:
+      operationId: getCurrentUser
+      tags: [auth]
+      summary: Get the currently signed-in user (or null)
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionInfo"
+
+  /auth/login:
+    post:
+      operationId: loginUser
+      tags: [auth]
+      summary: Sign in as a demo prototype user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: signed in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionInfo"
+        "401":
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logoutUser
+      tags: [auth]
+      summary: Sign out
+      responses:
+        "200":
+          description: signed out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /auth/demo-users:
+    get:
+      operationId: listDemoUsers
+      tags: [auth]
+      summary: List demo accounts available to log in as
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DemoUser"
+
+  /capacity/run-sheet:
+    get:
+      operationId: getRunSheet
+      tags: [capacity]
+      summary: Daily shift run-sheet for a warehouse, grouped by dock slot
+      parameters:
+        - in: query
+          name: date
+          schema: { type: string, format: date }
+          description: ISO date (YYYY-MM-DD), defaults to today
+        - in: query
+          name: warehouseId
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunSheet"
+
+  /dashboard/overview:
+    get:
+      operationId: getDashboardOverview
+      tags: [dashboard]
+      summary: Top-level inventory & operations totals
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardOverview"
+
+  /dashboard/quarterly-board:
+    get:
+      operationId: getQuarterlyBoard
+      tags: [dashboard]
+      summary: Quarterly planning board grouped by quarter
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuarterlyBoardEntry"
+
+  /inventory:
+    get:
+      operationId: listInventory
+      tags: [inventory]
+      summary: List inventory items visible to the current user
+      parameters:
+        - in: query
+          name: status
+          schema: { type: string }
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: warehouseId
+          schema: { type: integer }
+        - in: query
+          name: clientId
+          schema: { type: integer }
+        - in: query
+          name: supplierId
+          schema: { type: integer }
+        - in: query
+          name: quarter
+          schema: { type: string }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InventoryItem"
+
+  /inventory/{id}:
+    get:
+      operationId: getInventoryItem
+      tags: [inventory]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItemDetail"
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateInventoryItem
+      tags: [inventory]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryItemUpdate"
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItem"
+
+  /inventory/{id}/packaging:
+    get:
+      operationId: getPackagingSpec
+      tags: [packaging]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PackagingSpec"
+    patch:
+      operationId: updatePackagingSpec
+      tags: [packaging]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PackagingSpecUpdate"
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PackagingSpec"
+
+  /inventory/{id}/notes:
+    get:
+      operationId: listItemNotes
+      tags: [notes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Note"
+    post:
+      operationId: createItemNote
+      tags: [notes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteCreate"
+      responses:
+        "201":
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Note"
+
+  /inventory/{id}/history:
+    get:
+      operationId: getItemHistory
+      tags: [audit]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuditLogEntry"
+
+  /audit-logs:
+    get:
+      operationId: listAuditLogs
+      tags: [audit]
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuditLogEntry"
+
+  /exceptions:
+    get:
+      operationId: listExceptions
+      tags: [exceptions]
+      summary: Open compliance/exception flags
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComplianceFlag"
+
+  /exceptions/recompute:
+    post:
+      operationId: recomputeExceptions
+      tags: [exceptions]
+      summary: Re-run the exception engine on demand
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecomputeResult"
+
+  /integrations:
+    get:
+      operationId: listIntegrations
+      tags: [integrations]
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Integration"
+
+  /integrations/sync:
+    post:
+      operationId: triggerSyncJob
+      tags: [integrations]
+      summary: Trigger a mock sync job for an integration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SyncRequest"
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncJob"
+
+  /integrations/sync-jobs:
+    get:
+      operationId: listSyncJobs
+      tags: [integrations]
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SyncJob"
+
+  /directory/clients:
+    get:
+      operationId: listClients
+      tags: [directory]
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+
+  /directory/suppliers:
+    get:
+      operationId: listSuppliers
+      tags: [directory]
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Supplier"
+
+  /directory/warehouses:
+    get:
+      operationId: listWarehouses
+      tags: [directory]
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Warehouse"
+
+  /export/inventory.csv:
+    get:
+      operationId: exportInventoryCsv
+      tags: [export]
+      summary: Tableau-friendly CSV export of inventory + packaging
+      responses:
+        "200":
+          description: ok
+          content:
+            text/csv:
+              schema:
+                type: string
+
+  /capacity/board:
+    get:
+      operationId: getCapacityBoard
+      tags: [capacity]
+      summary: Dock-slot capacity grid for a given week and warehouse
+      parameters:
+        - in: query
+          name: weekStart
+          schema: { type: string }
+        - in: query
+          name: warehouseId
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CapacityBoard"
+
+  /capacity/slots:
+    post:
+      operationId: createDockSlot
+      tags: [capacity]
+      summary: Create a recurring dock slot (admin / warehouse manager)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDockSlotRequest"
+      responses:
+        "201":
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  slot: { $ref: "#/components/schemas/DockSlot" }
+                required: [slot]
+
+  /capacity/slots/{id}:
+    delete:
+      operationId: deleteDockSlot
+      tags: [capacity]
+      summary: Delete a dock slot
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /capacity/reservations:
+    post:
+      operationId: createSlotReservation
+      tags: [capacity]
+      summary: Reserve dock-slot capacity for a week
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSlotReservationRequest"
+      responses:
+        "201":
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservation: { $ref: "#/components/schemas/SlotReservation" }
+                required: [reservation]
+
+  /capacity/reservations/{id}:
+    patch:
+      operationId: updateSlotReservation
+      tags: [capacity]
+      summary: Update a reservation's status, pallet count, or reference
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSlotReservationRequest"
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservation: { $ref: "#/components/schemas/SlotReservation" }
+                required: [reservation]
+    delete:
+      operationId: deleteSlotReservation
+      tags: [capacity]
+      summary: Delete a reservation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /capacity/reservations/{id}/manifest:
+    get:
+      operationId: getReservationManifest
+      tags: [capacity]
+      summary: Printable shipment manifest for a confirmed reservation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentManifest"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status: { type: string }
+      required: [status]
+
+    LoginRequest:
+      type: object
+      properties:
+        username: { type: string }
+        password: { type: string }
+      required: [username, password]
+
+    SyncRequest:
+      type: object
+      properties:
+        integrationId: { type: integer }
+      required: [integrationId]
+
+    OkResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+      required: [ok]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error: { type: string }
+      required: [error]
+
+    UserRole:
+      type: string
+      enum:
+        - admin
+        - warehouse_manager
+        - supplier
+        - client
+        - auditor
+
+    DemoUser:
+      type: object
+      properties:
+        username: { type: string }
+        displayName: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        scopeLabel: { type: ["string", "null"] }
+        password: { type: string }
+      required: [username, displayName, role, password]
+
+    SessionInfo:
+      type: object
+      properties:
+        user:
+          oneOf:
+            - $ref: "#/components/schemas/CurrentUser"
+            - type: "null"
+      required: [user]
+
+    CurrentUser:
+      type: object
+      properties:
+        id: { type: integer }
+        username: { type: string }
+        displayName: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        clientId: { type: ["integer", "null"] }
+        supplierId: { type: ["integer", "null"] }
+        warehouseId: { type: ["integer", "null"] }
+      required: [id, username, displayName, role]
+
+    Client:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        code: { type: string }
+      required: [id, name, code]
+
+    Supplier:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        code: { type: string }
+      required: [id, name, code]
+
+    Warehouse:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        code: { type: string }
+        location: { type: ["string", "null"] }
+      required: [id, name, code]
+
+    InventoryItem:
+      type: object
+      properties:
+        id: { type: integer }
+        sku: { type: string }
+        partNumber: { type: ["string", "null"] }
+        serialNumber: { type: ["string", "null"] }
+        stockNumber: { type: ["string", "null"] }
+        poNumber: { type: ["string", "null"] }
+        workOrderNumber: { type: ["string", "null"] }
+        supplierRef: { type: ["string", "null"] }
+        carrierRef: { type: ["string", "null"] }
+        shipmentRef: { type: ["string", "null"] }
+        asnNumber: { type: ["string", "null"] }
+        description: { type: string }
+        quantityOnHand: { type: integer }
+        quantityRequested: { type: integer }
+        reorderPoint: { type: integer }
+        warehouseLocation: { type: ["string", "null"] }
+        warehouseId: { type: integer }
+        warehouseName: { type: ["string", "null"] }
+        supplierId: { type: ["integer", "null"] }
+        supplierName: { type: ["string", "null"] }
+        clientId: { type: ["integer", "null"] }
+        clientName: { type: ["string", "null"] }
+        status: { type: string }
+        priority: { type: ["string", "null"] }
+        quarter: { type: string }
+        year: { type: integer }
+        nextReviewDate: { type: ["string", "null"] }
+        lastUpdated: { type: string }
+        openExceptionCount: { type: integer }
+      required:
+        - id
+        - sku
+        - description
+        - quantityOnHand
+        - quantityRequested
+        - reorderPoint
+        - warehouseId
+        - status
+        - quarter
+        - year
+        - lastUpdated
+        - openExceptionCount
+
+    InventoryItemDetail:
+      type: object
+      properties:
+        item: { $ref: "#/components/schemas/InventoryItem" }
+        packaging: { $ref: "#/components/schemas/PackagingSpec" }
+        notes:
+          type: array
+          items: { $ref: "#/components/schemas/Note" }
+        exceptions:
+          type: array
+          items: { $ref: "#/components/schemas/ComplianceFlag" }
+        history:
+          type: array
+          items: { $ref: "#/components/schemas/AuditLogEntry" }
+      required: [item, packaging, notes, exceptions, history]
+
+    InventoryItemUpdate:
+      type: object
+      properties:
+        status: { type: ["string", "null"] }
+        quantityOnHand: { type: ["integer", "null"] }
+        quantityRequested: { type: ["integer", "null"] }
+        reorderPoint: { type: ["integer", "null"] }
+        priority: { type: ["string", "null"] }
+        warehouseLocation: { type: ["string", "null"] }
+        nextReviewDate: { type: ["string", "null"] }
+        carrierRef: { type: ["string", "null"] }
+        shipmentRef: { type: ["string", "null"] }
+        asnNumber: { type: ["string", "null"] }
+
+    PackagingSpec:
+      type: object
+      properties:
+        itemId: { type: integer }
+        packageLength: { type: ["number", "null"] }
+        packageWidth: { type: ["number", "null"] }
+        packageHeight: { type: ["number", "null"] }
+        packageWeight: { type: ["number", "null"] }
+        palletLength: { type: ["number", "null"] }
+        palletWidth: { type: ["number", "null"] }
+        palletHeight: { type: ["number", "null"] }
+        palletWeight: { type: ["number", "null"] }
+        unitsPerCase: { type: ["integer", "null"] }
+        casesPerPallet: { type: ["integer", "null"] }
+        unitOfMeasure: { type: ["string", "null"] }
+        maxStackHeight: { type: ["integer", "null"] }
+        stackable: { type: boolean }
+        fragile: { type: boolean }
+        hazmatFlag: { type: boolean }
+        restrictedMaterialFlag: { type: boolean }
+        temperatureControlRequired: { type: boolean }
+        orientationRequirement: { type: ["string", "null"] }
+        carrierRequirement: { type: ["string", "null"] }
+        dockAssignment: { type: ["string", "null"] }
+        loadSequence: { type: ["integer", "null"] }
+        freightClass: { type: ["string", "null"] }
+        packagingMaterials: { type: ["string", "null"] }
+        labelingRequirements: { type: ["string", "null"] }
+        barcodeRequired: { type: boolean }
+        qrCodeRequired: { type: boolean }
+        asnRequired: { type: boolean }
+        clientPackagingNotes: { type: ["string", "null"] }
+        supplierComplianceNotes: { type: ["string", "null"] }
+        warehouseHandlingNotes: { type: ["string", "null"] }
+        lastVerifiedDate: { type: ["string", "null"] }
+        verifiedBy: { type: ["string", "null"] }
+      required:
+        - itemId
+        - stackable
+        - fragile
+        - hazmatFlag
+        - restrictedMaterialFlag
+        - temperatureControlRequired
+        - barcodeRequired
+        - qrCodeRequired
+        - asnRequired
+
+    PackagingSpecUpdate:
+      type: object
+      properties:
+        packageLength: { type: ["number", "null"] }
+        packageWidth: { type: ["number", "null"] }
+        packageHeight: { type: ["number", "null"] }
+        packageWeight: { type: ["number", "null"] }
+        palletLength: { type: ["number", "null"] }
+        palletWidth: { type: ["number", "null"] }
+        palletHeight: { type: ["number", "null"] }
+        palletWeight: { type: ["number", "null"] }
+        unitsPerCase: { type: ["integer", "null"] }
+        casesPerPallet: { type: ["integer", "null"] }
+        unitOfMeasure: { type: ["string", "null"] }
+        maxStackHeight: { type: ["integer", "null"] }
+        stackable: { type: ["boolean", "null"] }
+        fragile: { type: ["boolean", "null"] }
+        hazmatFlag: { type: ["boolean", "null"] }
+        restrictedMaterialFlag: { type: ["boolean", "null"] }
+        temperatureControlRequired: { type: ["boolean", "null"] }
+        orientationRequirement: { type: ["string", "null"] }
+        carrierRequirement: { type: ["string", "null"] }
+        dockAssignment: { type: ["string", "null"] }
+        loadSequence: { type: ["integer", "null"] }
+        freightClass: { type: ["string", "null"] }
+        packagingMaterials: { type: ["string", "null"] }
+        labelingRequirements: { type: ["string", "null"] }
+        barcodeRequired: { type: ["boolean", "null"] }
+        qrCodeRequired: { type: ["boolean", "null"] }
+        asnRequired: { type: ["boolean", "null"] }
+        clientPackagingNotes: { type: ["string", "null"] }
+        supplierComplianceNotes: { type: ["string", "null"] }
+        warehouseHandlingNotes: { type: ["string", "null"] }
+        markVerified: { type: ["boolean", "null"] }
+
+    NoteVisibility:
+      type: string
+      enum:
+        - shared
+        - client_visible
+        - supplier_visible
+        - warehouse_internal
+        - admin_only
+
+    NoteCategory:
+      type: string
+      enum:
+        - general
+        - packaging
+        - handling
+        - loading
+        - shipment
+        - supplier_action
+        - client_request
+        - quarterly_plan
+
+    Note:
+      type: object
+      properties:
+        id: { type: integer }
+        itemId: { type: integer }
+        body: { type: string }
+        visibility: { $ref: "#/components/schemas/NoteVisibility" }
+        category: { $ref: "#/components/schemas/NoteCategory" }
+        authorId: { type: integer }
+        authorName: { type: string }
+        authorRole: { $ref: "#/components/schemas/UserRole" }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+      required:
+        - id
+        - itemId
+        - body
+        - visibility
+        - category
+        - authorId
+        - authorName
+        - authorRole
+        - createdAt
+        - updatedAt
+
+    NoteCreate:
+      type: object
+      properties:
+        body: { type: string }
+        visibility: { $ref: "#/components/schemas/NoteVisibility" }
+        category: { $ref: "#/components/schemas/NoteCategory" }
+      required: [body, visibility, category]
+
+    AuditLogEntry:
+      type: object
+      properties:
+        id: { type: integer }
+        recordType: { type: string }
+        recordId: { type: integer }
+        itemId: { type: ["integer", "null"] }
+        itemSku: { type: ["string", "null"] }
+        action: { type: string }
+        field: { type: ["string", "null"] }
+        oldValue: { type: ["string", "null"] }
+        newValue: { type: ["string", "null"] }
+        category: { type: string }
+        actorId: { type: ["integer", "null"] }
+        actorName: { type: ["string", "null"] }
+        actorRole: { type: ["string", "null"] }
+        createdAt: { type: string }
+      required: [id, recordType, recordId, action, category, createdAt]
+
+    ComplianceFlagSeverity:
+      type: string
+      enum: [low, medium, high, critical]
+
+    ComplianceFlag:
+      type: object
+      properties:
+        id: { type: integer }
+        itemId: { type: integer }
+        itemSku: { type: string }
+        itemDescription: { type: string }
+        category: { type: string }
+        code: { type: string }
+        message: { type: string }
+        severity: { $ref: "#/components/schemas/ComplianceFlagSeverity" }
+        detectedAt: { type: string }
+        clientName: { type: ["string", "null"] }
+        supplierName: { type: ["string", "null"] }
+        warehouseName: { type: ["string", "null"] }
+      required:
+        - id
+        - itemId
+        - itemSku
+        - itemDescription
+        - category
+        - code
+        - message
+        - severity
+        - detectedAt
+
+    DashboardOverview:
+      type: object
+      properties:
+        totalItems: { type: integer }
+        belowReorder: { type: integer }
+        pendingSupplier: { type: integer }
+        pendingClient: { type: integer }
+        backordered: { type: integer }
+        delayed: { type: integer }
+        readyForPicking: { type: integer }
+        readyForPacking: { type: integer }
+        readyForStaging: { type: integer }
+        readyForLoading: { type: integer }
+        readyForShipment: { type: integer }
+        openExceptions: { type: integer }
+        criticalExceptions: { type: integer }
+        statusBreakdown:
+          type: array
+          items:
+            type: object
+            properties:
+              status: { type: string }
+              count: { type: integer }
+            required: [status, count]
+        recentActivity:
+          type: array
+          items: { $ref: "#/components/schemas/AuditLogEntry" }
+        lastSync: { type: ["string", "null"] }
+        nextSync: { type: ["string", "null"] }
+      required:
+        - totalItems
+        - belowReorder
+        - pendingSupplier
+        - pendingClient
+        - backordered
+        - delayed
+        - readyForPicking
+        - readyForPacking
+        - readyForStaging
+        - readyForLoading
+        - readyForShipment
+        - openExceptions
+        - criticalExceptions
+        - statusBreakdown
+        - recentActivity
+
+    QuarterlyBoardEntry:
+      type: object
+      properties:
+        quarter: { type: string }
+        year: { type: integer }
+        totalItems: { type: integer }
+        clientRequested: { type: integer }
+        supplierPending: { type: integer }
+        warehouseApproved: { type: integer }
+        packagingReady: { type: integer }
+        loadingReady: { type: integer }
+        shipmentReady: { type: integer }
+        unresolvedExceptions: { type: integer }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/InventoryItem" }
+      required:
+        - quarter
+        - year
+        - totalItems
+        - clientRequested
+        - supplierPending
+        - warehouseApproved
+        - packagingReady
+        - loadingReady
+        - shipmentReady
+        - unresolvedExceptions
+        - items
+
+    Integration:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        kind: { type: string }
+        status: { type: string }
+        lastSyncAt: { type: ["string", "null"] }
+        lastSyncStatus: { type: ["string", "null"] }
+        lastSyncMessage: { type: ["string", "null"] }
+        nextSyncAt: { type: ["string", "null"] }
+      required: [id, name, kind, status]
+
+    SyncJob:
+      type: object
+      properties:
+        id: { type: integer }
+        integrationId: { type: integer }
+        integrationName: { type: string }
+        status: { type: string }
+        startedAt: { type: string }
+        finishedAt: { type: ["string", "null"] }
+        recordsProcessed: { type: integer }
+        message: { type: ["string", "null"] }
+      required:
+        - id
+        - integrationId
+        - integrationName
+        - status
+        - startedAt
+        - recordsProcessed
+
+    RecomputeResult:
+      type: object
+      properties:
+        evaluated: { type: integer }
+        opened: { type: integer }
+        resolved: { type: integer }
+        currentOpen: { type: integer }
+      required: [evaluated, opened, resolved, currentOpen]
+
+    DockSlot:
+      type: object
+      properties:
+        id: { type: integer }
+        warehouseId: { type: integer }
+        label: { type: string }
+        dayOfWeek: { type: integer }
+        startTime: { type: string }
+        endTime: { type: string }
+        palletCapacity: { type: integer }
+        palletsReserved: { type: integer }
+      required:
+        - id
+        - warehouseId
+        - label
+        - dayOfWeek
+        - startTime
+        - endTime
+        - palletCapacity
+
+    SlotReservation:
+      type: object
+      properties:
+        id: { type: integer }
+        slotId: { type: integer }
+        weekStart: { type: string }
+        supplierId: { type: ["integer", "null"] }
+        clientId: { type: ["integer", "null"] }
+        itemId: { type: ["integer", "null"] }
+        palletCount: { type: integer }
+        reference: { type: ["string", "null"] }
+        status: { type: string }
+        createdById: { type: integer }
+        createdAt: { type: string }
+        supplierName: { type: ["string", "null"] }
+        clientName: { type: ["string", "null"] }
+        itemSku: { type: ["string", "null"] }
+        itemDescription: { type: ["string", "null"] }
+      required:
+        - id
+        - slotId
+        - weekStart
+        - palletCount
+        - status
+        - createdById
+        - createdAt
+
+    CapacityDay:
+      type: object
+      properties:
+        date: { type: string }
+        dayOfWeek: { type: integer }
+        label: { type: string }
+      required: [date, dayOfWeek, label]
+
+    CapacityBoard:
+      type: object
+      properties:
+        weekStart: { type: string }
+        warehouseId: { type: ["integer", "null"] }
+        warehouses:
+          type: array
+          items: { $ref: "#/components/schemas/Warehouse" }
+        days:
+          type: array
+          items: { $ref: "#/components/schemas/CapacityDay" }
+        slotDefinitions:
+          type: array
+          items: { $ref: "#/components/schemas/DockSlot" }
+        reservations:
+          type: array
+          items: { $ref: "#/components/schemas/SlotReservation" }
+      required:
+        - weekStart
+        - warehouses
+        - days
+        - slotDefinitions
+        - reservations
+
+    CreateDockSlotRequest:
+      type: object
+      properties:
+        warehouseId: { type: integer }
+        label: { type: string }
+        dayOfWeek: { type: integer }
+        startTime: { type: string }
+        endTime: { type: string }
+        palletCapacity: { type: integer }
+      required: [warehouseId, label, dayOfWeek, startTime, endTime, palletCapacity]
+
+    CreateSlotReservationRequest:
+      type: object
+      properties:
+        slotId: { type: integer }
+        weekStart: { type: string }
+        palletCount: { type: integer }
+        itemId: { type: ["integer", "null"] }
+        supplierId: { type: ["integer", "null"] }
+        clientId: { type: ["integer", "null"] }
+        reference: { type: ["string", "null"] }
+      required: [slotId, weekStart, palletCount]
+
+    UpdateSlotReservationRequest:
+      type: object
+      properties:
+        status: { type: string }
+        palletCount: { type: integer }
+        reference: { type: string }
+
+    ShipmentManifest:
+      type: object
+      properties:
+        reservation: { $ref: "#/components/schemas/SlotReservation" }
+        slot:
+          type: object
+          properties:
+            id: { type: integer }
+            label: { type: string }
+            dayOfWeek: { type: integer }
+            startTime: { type: string }
+            endTime: { type: string }
+            palletCapacity: { type: integer }
+          required: [id, label, dayOfWeek, startTime, endTime, palletCapacity]
+        warehouse:
+          type: object
+          properties:
+            id: { type: integer }
+            name: { type: string }
+            code: { type: string, nullable: true }
+            location: { type: string, nullable: true }
+          required: [id, name]
+        supplier:
+          nullable: true
+          type: object
+          properties:
+            id: { type: integer }
+            name: { type: string }
+            code: { type: string, nullable: true }
+          required: [id, name]
+        client:
+          nullable: true
+          type: object
+          properties:
+            id: { type: integer }
+            name: { type: string }
+            code: { type: string, nullable: true }
+          required: [id, name]
+        item:
+          nullable: true
+          type: object
+          properties:
+            id: { type: integer }
+            sku: { type: string }
+            description: { type: string }
+            partNumber: { type: string, nullable: true }
+            poNumber: { type: string, nullable: true }
+            asnNumber: { type: string, nullable: true }
+            warehouseLocation: { type: string, nullable: true }
+            quantityOnHand: { type: integer }
+          required: [id, sku, description, quantityOnHand]
+        packaging:
+          nullable: true
+          $ref: "#/components/schemas/PackagingSpec"
+        flags:
+          type: array
+          items: { $ref: "#/components/schemas/ComplianceFlag" }
+        manifestNumber: { type: string }
+        generatedAt: { type: string, format: date-time }
+        generatedBy: { type: string }
+        barcodePayload: { type: string }
+        scheduledDate: { type: string, format: date }
+      required:
+        - reservation
+        - slot
+        - warehouse
+        - flags
+        - manifestNumber
+        - generatedAt
+        - generatedBy
+        - barcodePayload
+        - scheduledDate
+
+    RunSheetReservation:
+      type: object
+      properties:
+        id: { type: integer }
+        seq: { type: integer }
+        palletCount: { type: integer }
+        reference: { type: ["string", "null"] }
+        status: { type: string }
+        supplierName: { type: ["string", "null"] }
+        clientName: { type: ["string", "null"] }
+        itemSku: { type: ["string", "null"] }
+        itemDescription: { type: ["string", "null"] }
+        warehouseLocation: { type: ["string", "null"] }
+        hazmat: { type: boolean }
+        fragile: { type: boolean }
+        temperatureControl: { type: boolean }
+        openFlagCount: { type: integer }
+        loadSequence: { type: ["integer", "null"] }
+      required:
+        - id
+        - seq
+        - palletCount
+        - status
+        - hazmat
+        - fragile
+        - temperatureControl
+        - openFlagCount
+
+    RunSheetDock:
+      type: object
+      properties:
+        slotId: { type: integer }
+        label: { type: string }
+        startTime: { type: string }
+        endTime: { type: string }
+        palletCapacity: { type: integer }
+        palletsReserved: { type: integer }
+        reservations:
+          type: array
+          items: { $ref: "#/components/schemas/RunSheetReservation" }
+      required:
+        - slotId
+        - label
+        - startTime
+        - endTime
+        - palletCapacity
+        - palletsReserved
+        - reservations
+
+    RunSheet:
+      type: object
+      properties:
+        date: { type: string, format: date }
+        dayLabel: { type: string }
+        warehouseId: { type: integer }
+        warehouseName: { type: string }
+        warehouseCode: { type: ["string", "null"] }
+        warehouseLocation: { type: ["string", "null"] }
+        generatedAt: { type: string, format: date-time }
+        totalDocks: { type: integer }
+        totalPallets: { type: integer }
+        totalReservations: { type: integer }
+        docks:
+          type: array
+          items: { $ref: "#/components/schemas/RunSheetDock" }
+      required:
+        - date
+        - dayLabel
+        - warehouseId
+        - warehouseName
+        - generatedAt
+        - totalDocks
+        - totalPallets
+        - totalReservations
+        - docks
+
