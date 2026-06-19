@@ -251,3 +251,22 @@ export function useDeleteSlotReservation(opts?: MutOpts<any, { id: number }>) {
     ...opts?.mutation,
   });
 }
+
+export const getListShipmentsQueryKey = () => ["listShipments"] as const;
+export const getGetShipmentQueryKey = (id: number) => ["getShipment", id] as const;
+
+export function useListShipments(_p?: undefined, opts?: QueryOpts<any>) {
+  return useQuery({ queryKey: getListShipmentsQueryKey(), queryFn: () => apiFetch("/shipments"), ...opts?.query });
+}
+
+export function useGetShipment(id: number, opts?: QueryOpts<any>) {
+  return useQuery({ queryKey: getGetShipmentQueryKey(id), queryFn: () => apiFetch(`/shipments/${id}`), enabled: Number.isFinite(id), ...opts?.query });
+}
+
+export function useVerifyShipment(opts?: MutOpts<any, Record<string, unknown>>) {
+  return useMutation({ mutationFn: (data: Record<string, unknown>) => apiFetch("/shipments/verify", { method: "POST", body: JSON.stringify(data) }), ...opts?.mutation });
+}
+
+export function useCreateShipment(opts?: MutOpts<any, Record<string, unknown>>) {
+  return useMutation({ mutationFn: (data: Record<string, unknown>) => apiFetch("/shipments", { method: "POST", body: JSON.stringify(data) }), ...opts?.mutation });
+}

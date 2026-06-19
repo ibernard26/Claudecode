@@ -19,6 +19,8 @@ import Exceptions from "@/pages/Exceptions";
 import AuditLog from "@/pages/AuditLog";
 import Integrations from "@/pages/Integrations";
 import Directory from "@/pages/Directory";
+import Shipments from "@/pages/Shipments";
+import NewShipment from "@/pages/NewShipment";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,8 @@ function ProtectedRoutes() {
         <Route path="/audit" component={AuditLog} />
         <Route path="/integrations" component={Integrations} />
         <Route path="/directory" component={Directory} />
+        <Route path="/shipments" component={Shipments} />
+        <Route path="/shipments/new" component={NewShipment} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>

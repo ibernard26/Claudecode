@@ -11,6 +11,7 @@ import integrationsRouter from "./integrations";
 import directoryRouter from "./directory";
 import exportRouter from "./export";
 import capacityRouter from "./capacity";
+import shipmentsRouter from "./shipments";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(integrationsRouter);
 router.use(directoryRouter);
 router.use(exportRouter);
 router.use(capacityRouter);
+router.use(shipmentsRouter);
 
 export default router;

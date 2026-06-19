@@ -13,6 +13,7 @@ import {
   RefreshCw,
   Menu,
   ClipboardList,
+  Truck,
 } from "lucide-react";
 import { 
   useGetCurrentUser, 
@@ -44,6 +45,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     { href: "/inventory", label: "Inventory", icon: Package },
     { href: "/quarterly", label: "Quarterly Board", icon: Calendar },
     { href: "/capacity", label: "Capacity Planner", icon: CalendarRange },
+    { href: "/shipments", label: "Shipments", icon: Truck },
     { href: "/run-sheet", label: "Run Sheet", icon: ClipboardList },
     { href: "/exceptions", label: "Exceptions", icon: AlertTriangle },
     { href: "/audit", label: "Audit Log", icon: History },
