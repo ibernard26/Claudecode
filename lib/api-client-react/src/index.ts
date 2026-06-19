@@ -161,7 +161,7 @@ export function useGetRunSheet(
 export function useGetReservationManifest(id: number, opts?: QueryOpts<any>) {
   return useQuery({
     queryKey: getGetReservationManifestQueryKey(id),
-    queryFn: () => apiFetch(`/capacity/manifest/${id}`),
+    queryFn: () => apiFetch(`/capacity/reservations/${id}/manifest`),
     enabled: Number.isFinite(id),
     ...opts?.query,
   });
