@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg,#031426 0%, #06182b 100%);
+  color: #e6f0ff;
+  height: 100vh;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel {
+  width: 980px;
+  height: 640px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 20px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls {
+  margin-top: 16px;
+  display:flex;
+  gap:12px;
+}
+
+.results {
+  overflow: auto;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  height: 100%;
+}
