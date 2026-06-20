@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MI | PE Market Intelligence Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --card: #1c2030;
+    --border: #2a2f42;
+    --accent: #4f8ef7;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --muted: #6b7280;
+    --text: #e5e7eb;
+    --text-dim: #9ca3af;
+    --font: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header h1 { font-size: 18px; font-weight: 700; letter-spacing: .03em; }
+  header h1 span { color: var(--accent); }
+  .last-updated { font-size: 12px; color: var(--muted); font-family: var(--font); }
+
+  /* LAYOUT */
+  main { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
+  .section { margin-bottom: 48px; }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 18px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .card-body { padding: 16px 18px; }
+
+  /* TABLES */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-family: var(--font); }
+  thead th {
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #1f2436;
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(79,142,247,.05); }
+
+  /* BADGES */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .badge-buy  { background: rgba(52,211,153,.15); color: var(--green); }
+  .badge-sell { background: rgba(248,113,113,.15); color: var(--red); }
+  .badge-hold { background: rgba(251,191,36,.12); color: var(--yellow); }
+  .badge-bull { background: rgba(52,211,153,.15); color: var(--green); }
+  .badge-bear { background: rgba(248,113,113,.15); color: var(--red); }
+  .badge-neut { background: rgba(107,114,128,.15); color: var(--muted); }
+  .badge-high { background: rgba(79,142,247,.15); color: var(--accent); }
+  .badge-med  { background: rgba(251,191,36,.12); color: var(--yellow); }
+
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .dim { color: var(--muted); }
+
+  /* CHART CONTAINERS */
+  .chart-wrap { position: relative; padding: 12px 4px 8px; }
+  .chart-wrap canvas { max-height: 280px; }
+
+  /* MEMO */
+  .memo {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .memo-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .memo-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(79,142,247,.12);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .memo-title { font-size: 14px; font-weight: 700; }
+  .memo-date { font-size: 11px; color: var(--muted); margin-left: auto; font-family: var(--font); }
+  .memo-body { padding: 18px 20px; font-size: 13.5px; line-height: 1.75; color: #d1d5db; }
+  .memo-body p { margin-bottom: 10px; }
+  .memo-body p:last-child { margin-bottom: 0; }
+  .memo-body strong { color: var(--text); }
+  .memo-kv { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .kv { display: flex; flex-direction: column; }
+  .kv-label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 2px; }
+  .kv-val { font-size: 16px; font-weight: 700; font-family: var(--font); }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* PILL ROW */
+  .pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .pill.active, .pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(79,142,247,.08); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>MI <span>|</span> PE Market Intelligence Dashboard</h1>
+    <div style="font-size:12px;color:var(--muted);margin-top:2px;">Private Equity · Equities · Energy · AI/Tech · Healthcare · Defense</div>
+  </div>
+  <div class="last-updated">Last Updated: May 6, 2026 &nbsp;·&nbsp; Data through May 5, 2026</div>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TABLE 1: EQUITY MARKET DAILY TRACKER   -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Table 1 — Equity Market Daily Tracker</div>
+  <div class="card">
+    <div class="card-header">S&amp;P 500 &amp; Nasdaq · Rolling Daily Closes · Moving Averages · Momentum Signals</div>
+    <div class="tbl-wrap">
+      <table id="equityTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>S&amp;P 500</th>
+            <th>S&amp;P Δ%</th>
+            <th>Nasdaq</th>
+            <th>Nasdaq Δ%</th>
+            <th>5-Day MA</th>
+            <th>7-Day MA</th>
+            <th>Apr MTD%</th>
+            <th>Signal</th>
+            <th>Key Driver</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Apr 20</td><td>7,109.14</td><td class="neg">-0.24%</td><td>24,404.39</td><td class="neg">-0.26%</td><td>7,109.14</td><td>7,109.14</td><td class="pos">+8.89%</td><td><span class="badge badge-hold">HOLD</span></td><td class="dim">Nasdaq 13-day streak ends</td></tr>
+          <tr><td>Apr 21</td><td>7,064.01</td><td class="neg">-0.63%</td><td>—</td><td class="dim">—</td><td>7,086.58</td><td>7,086.58</td><td class="pos">+8.20%</td><td><span class="badge badge-hold">HOLD</span></td><td class="dim">Geopolitical wobble; Iran watch</td></tr>
+          <tr><td>Apr 22</td><td>7,137.90</td><td class="pos">+1.05%</td><td>24,657.57</td><td class="pos">+1.64%</td><td>7,103.68</td><td>7,103.68</td><td class="pos">+9.33%</td><td><span class="badge badge-buy">BUY</span></td><td class="dim">Nasdaq new ATH intraday</td></tr>
+          <tr><td>Apr 23</td><td>7,108.40</td><td class="neg">-0.41%</td><td>24,438.50</td><td class="neg">-0.89%</td><td>7,104.86</td><td>7,104.86</td><td class="pos">+8.88%</td><td><span class="badge badge-hold">HOLD</span></td><td class="dim">Chip sector digesting; profit-taking</td></tr>
+          <tr><td>Apr 24</td><td>7,165.08</td><td class="pos">+0.80%</td><td>24,836.60</td><td class="pos">+1.63%</td><td>7,116.91</td><td>7,116.91</td><td class="pos">+9.75%</td><td><span class="badge badge-buy">BUY</span></td><td class="dim">Record close; AMD +45% MTD; Intel rally</td></tr>
+          <tr><td>Apr 27</td><td>7,138.80</td><td class="neg">-0.49%</td><td>24,663.80</td><td class="neg">-0.90%</td><td>7,122.84</td><td>7,120.56</td><td class="pos">+9.35%</td><td><span class="badge badge-hold">HOLD</span></td><td class="dim">OpenAI growth concerns; oil pressure</td></tr>
+          <tr><td>Apr 28</td><td>7,173.91</td><td class="pos">+0.49%</td><td>24,887.00</td><td class="pos">+0.91%</td><td>7,144.82</td><td>7,128.18</td><td class="pos">+9.89%</td><td><span class="badge badge-buy">BUY</span></td><td class="dim">Fresh ATH 7,173.91; pre-Mag7 earnings</td></tr>
+          <tr><td>Apr 29</td><td>7,135.95</td><td class="neg">-0.53%</td><td>24,795.00</td><td class="neg">-0.37%</td><td>7,144.43</td><td>7,132.01</td><td class="pos">+9.30%</td><td><span class="badge badge-hold">HOLD</span></td><td class="dim">Fed pause; 10Y → 4.41%; Dow -280pts</td></tr>
+          <tr><td>Apr 30</td><td>7,155.00</td><td class="pos">+0.27%</td><td>24,850.00</td><td class="pos">+0.22%</td><td>7,153.75</td><td>7,145.01</td><td class="pos">+9.60%</td><td><span class="badge badge-hold">HOLD</span></td><td class="dim">Apple report; April closes ~+10%</td></tr>
+          <tr><td>May 1</td><td>7,230.12</td><td class="pos">+1.05%</td><td>25,114.44</td><td class="pos">+1.07%</td><td>7,166.76</td><td>7,158.18</td><td class="pos">+10.75%</td><td><span class="badge badge-buy">BUY</span></td><td class="dim">ATH 7,230.12; best month since Apr 2020</td></tr>
+          <tr><td>May 4</td><td>7,200.75</td><td class="neg">-0.41%</td><td>25,067.00</td><td class="neg">-0.19%</td><td>7,179.15</td><td>7,171.37</td><td class="dim">+10.30%</td><td><span class="badge badge-sell">SELL</span></td><td class="dim">Risk-off; UAE missile intercept</td></tr>
+          <tr><td>May 5</td><td>7,259.22</td><td class="pos">+0.81%</td><td>25,326.13</td><td class="pos">+1.03%</td><td>7,196.21</td><td>7,184.82</td><td class="pos">+11.19%</td><td><span class="badge badge-buy">BUY</span></td><td class="dim">ATH 7,259.22; oil -10%; Russell 2K ATH</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- EQUITY CHART: Line -->
+<div class="section">
+  <div class="section-title">Chart 1 — S&amp;P 500 Price vs. 5-Day &amp; 7-Day Moving Average</div>
+  <div class="card">
+    <div class="card-header">Line Chart · Daily Close Price · Rolling MAs · Apr 20 – May 5, 2026</div>
+    <div class="card-body">
+      <div class="chart-wrap">
+        <canvas id="equityChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TABLE 2: CRUDE OIL DAILY TRACKER       -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Table 2 — Crude Oil Daily Tracker</div>
+  <div class="card">
+    <div class="card-header">WTI &amp; Brent · Daily Closes · Spread Analysis · Geopolitical Drivers</div>
+    <div class="tbl-wrap">
+      <table id="oilTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>WTI ($/bbl)</th>
+            <th>Brent ($/bbl)</th>
+            <th>Spread</th>
+            <th>WTI Δ%</th>
+            <th>Brent YoY%</th>
+            <th>Geo Premium ⚑</th>
+            <th>Geopolitical Driver</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Apr 20</td><td>$96.26</td><td>$96.26</td><td>$0.00</td><td class="dim">—</td><td class="pos">+46.2%</td><td class="dim">—</td><td class="dim">ME risk premium intact</td></tr>
+          <tr><td>Apr 22</td><td>$96.00</td><td>$96.50</td><td>$0.50</td><td class="neg">-0.27%</td><td class="pos">+46.6%</td><td class="dim">—</td><td class="dim">Geopolitical tension elevated</td></tr>
+          <tr><td>Apr 23</td><td>$95.50</td><td>$96.00</td><td>$0.50</td><td class="neg">-0.52%</td><td class="pos">+45.8%</td><td class="dim">—</td><td class="dim">US-Iran talks tempering bid</td></tr>
+          <tr><td>Apr 24</td><td>$94.40</td><td>$105.33</td><td style="color:var(--yellow)">$10.93 ⚑</td><td class="neg">-1.15%</td><td class="pos">+60.0%</td><td style="color:var(--yellow)">FLAGGED</td><td class="dim">Brent decoupled; physical tightness</td></tr>
+          <tr><td>Apr 25</td><td>$94.04</td><td>$105.33</td><td style="color:var(--yellow)">$11.29 ⚑</td><td class="neg">-0.38%</td><td class="pos">+60.0%</td><td style="color:var(--yellow)">FLAGGED</td><td class="dim">Diplomacy progress; ME de-escalation</td></tr>
+          <tr><td>Apr 26</td><td>$93.68</td><td>$105.20</td><td style="color:var(--yellow)">$11.52 ⚑</td><td class="neg">-0.38%</td><td class="pos">+59.8%</td><td style="color:var(--yellow)">FLAGGED</td><td class="dim">Premium easing; talks in Pakistan</td></tr>
+          <tr><td>Apr 27</td><td>$95.50</td><td>$107.00</td><td style="color:var(--yellow)">$11.50 ⚑</td><td class="pos">+1.94%</td><td class="pos">+62.5%</td><td style="color:var(--yellow)">FLAGGED</td><td class="dim">Hormuz risk back; supply concerns</td></tr>
+          <tr><td>Apr 28</td><td>$96.00</td><td>$108.00</td><td style="color:var(--yellow)">$12.00 ⚑</td><td class="pos">+0.52%</td><td class="pos">+64.1%</td><td style="color:var(--yellow)">FLAGGED</td><td class="dim">Ceasefire fragile but holding</td></tr>
+          <tr><td>Apr 29</td><td>$96.50</td><td>$108.50</td><td style="color:var(--yellow)">$12.00 ⚑</td><td class="pos">+0.52%</td><td class="pos">+64.8%</td><td style="color:var(--yellow)">FLAGGED</td><td class="dim">Supply-side firmness</td></tr>
+          <tr><td>Apr 30</td><td>$95.80</td><td>$107.80</td><td style="color:var(--yellow)">$12.00 ⚑</td><td class="neg">-0.73%</td><td class="pos">+63.8%</td><td style="color:var(--yellow)">FLAGGED</td><td class="dim">Diplomacy progress</td></tr>
+          <tr><td>May 1</td><td>$95.00</td><td>$107.00</td><td style="color:var(--yellow)">$12.00 ⚑</td><td class="neg">-0.84%</td><td class="pos">+62.5%</td><td style="color:var(--yellow)">FLAGGED</td><td class="dim">End of strong April</td></tr>
+          <tr><td>May 4</td><td>$102.27</td><td>$109.87</td><td>$7.60</td><td class="pos">+7.65%</td><td class="pos">+66.9%</td><td class="dim">—</td><td class="dim">UAE missile intercept; Iran boats</td></tr>
+          <tr><td>May 5</td><td>$102.27</td><td>$109.87</td><td>$7.60</td><td class="dim">0.00%</td><td class="pos">+66.9%</td><td class="dim">—</td><td class="dim">WTI -3.9% intraday on Hegseth ceasefire</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:10px 18px;font-size:11px;color:var(--muted);border-top:1px solid var(--border)">
+      ⚑ Geopolitical premium flag: Brent-WTI spread &gt; $10 indicates elevated geopolitical risk pricing
+    </div>
+  </div>
+</div>
+
+<!-- OIL CHART: Line -->
+<div class="section">
+  <div class="section-title">Chart 2 — WTI vs. Brent Crude ($/bbl)</div>
+  <div class="card">
+    <div class="card-header">Line Chart · WTI &amp; Brent Daily Close · Spread Band · Apr 20 – May 5, 2026</div>
+    <div class="card-body">
+      <div class="chart-wrap">
+        <canvas id="oilChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TABLE 3: PE / M&A DEAL REGISTER        -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Table 3 — PE &amp; M&amp;A Deal Register</div>
+  <div class="card">
+    <div class="card-header">All material transactions · Apr 20 – May 5, 2026 · Updated per report cycle</div>
+    <div class="tbl-wrap">
+      <table id="dealTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Acquirer</th>
+            <th>Target</th>
+            <th>Sector</th>
+            <th>Structure</th>
+            <th>Value</th>
+            <th>Signal</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Apr 7*</td><td>Blackstone / TPG</td><td>Hologic</td><td>Healthcare</td><td>Take-Private</td><td>$18.3B EV</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 23</td><td>Blackstone</td><td>BXLS VI Fund</td><td>Life Sciences</td><td>PE Fund Close</td><td>$6.3B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 24</td><td>J&amp;J</td><td>Atraverse Medical</td><td>MedTech</td><td>Strategic Acq.</td><td>Undisclosed</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-med">MED</span></td></tr>
+          <tr><td>Apr 26</td><td>Stellus Rx</td><td>Tria Health (WindRose)</td><td>Pharmacy / PBM</td><td>PE Acquisition</td><td>Undisclosed</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-med">MED</span></td></tr>
+          <tr><td>Apr 26</td><td>Sanofi</td><td>Dynavax</td><td>Biopharma</td><td>Strategic M&amp;A</td><td>$2.2B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 27</td><td>Apollo</td><td>Forvia (Auto Interiors)</td><td>Automotive</td><td>PE Acquisition</td><td>$2.1B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-med">MED</span></td></tr>
+          <tr><td>Apr 27</td><td>Blackstone Consortium</td><td>Senior plc</td><td>Aero / Defense</td><td>Take-Private</td><td>£1.4B (~$1.9B)</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-med">MED</span></td></tr>
+          <tr><td>Apr 27</td><td>Sun Pharma</td><td>Organon</td><td>Pharma / Generics</td><td>Strategic M&amp;A</td><td>$11.75B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>May 4</td><td>Alphabet (Google)</td><td>Wiz</td><td>Cybersecurity / AI</td><td>Strategic Acq.</td><td>$32.0B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PE CHART: Bar -->
+<div class="section">
+  <div class="section-title">Chart 3 — PE &amp; M&amp;A Deal Value by Sector</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">Bar Chart · Deal Value ($B) by Sector · Apr–May 2026</div>
+      <div class="card-body">
+        <div class="chart-wrap">
+          <canvas id="dealBarChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">Pie Chart · Deal Count &amp; Value Composition by Sector</div>
+      <div class="card-body">
+        <div class="chart-wrap">
+          <canvas id="dealPieChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TABLE 4: SECTOR INTELLIGENCE LOG       -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Table 4 — Sector Intelligence Signal Log</div>
+  <div class="card">
+    <div class="card-header">AI · M&amp;A/PE · Healthcare · Defense · Energy · Rolling Signal Register</div>
+    <div class="tbl-wrap">
+      <table id="signalTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Sector</th>
+            <th>Category</th>
+            <th>Headline</th>
+            <th>Value / Metric</th>
+            <th>Signal</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Apr 23</td><td>Healthcare</td><td>PE Fund</td><td>Blackstone BXLS VI — largest-ever private life sciences fund closed</td><td>$6.3B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 25</td><td>Healthcare</td><td>Policy</td><td>14 drugmakers (Pfizer, Lilly, GSK, Boehringer) strike Trump pricing agreements</td><td>14 companies</td><td><span class="badge badge-neut">NEUTRAL</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 26</td><td>AI</td><td>Architecture</td><td>DeepSeek Hybrid Attention + 1M token context released</td><td>Open-source</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-med">MED</span></td></tr>
+          <tr><td>Apr 26</td><td>AI</td><td>Capex</td><td>Meta FY2026 AI capex guidance: $115–135B</td><td>$115–135B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 27</td><td>M&amp;A / PE</td><td>PE Acquisition</td><td>Apollo acquires Forvia auto interiors</td><td>$2.1B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-med">MED</span></td></tr>
+          <tr><td>Apr 27</td><td>Defense</td><td>Take-Private</td><td>Blackstone consortium / Senior plc UK aerospace</td><td>£1.4B (~$1.9B)</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-med">MED</span></td></tr>
+          <tr><td>Apr 27</td><td>Healthcare</td><td>Generics M&amp;A</td><td>Sun Pharma acquires Organon</td><td>$11.75B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 28</td><td>AI</td><td>Earnings Setup</td><td>Mag7 reports begin; hyperscaler capex ~$700B in 2026</td><td>~$700B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 29</td><td>Macro</td><td>Fed Decision</td><td>Fed split vote; H2 2026 cut timing unresolved</td><td>10Y → 4.41%</td><td><span class="badge badge-neut">NEUTRAL</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>Apr 30</td><td>Equities</td><td>Strategy</td><td>Goldman raises S&amp;P 500 target to 7,600 on +12% EPS + AI capex tailwind</td><td>7,600 target</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>May 1</td><td>PE</td><td>Q1 Aggregate</td><td>Q1 2026 PE M&amp;A: 614 deals / $154.6B (+12.6% YoY) / 22 deals &gt;$10B (record)</td><td>$154.6B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>May 1</td><td>Equities</td><td>Buybacks</td><td>YTD share buyback authorizations — record</td><td>$422B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-med">MED</span></td></tr>
+          <tr><td>May 4</td><td>Defense</td><td>Geopolitical</td><td>UAE missile intercept; US engages Iran small boats in Hormuz</td><td>—</td><td><span class="badge badge-bear">BEARISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>May 5</td><td>AI / Semis</td><td>Earnings</td><td>Micron surpasses $700B market cap; HBM sold out through 2026</td><td>+10% intraday</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>May 5</td><td>Energy</td><td>Price Action</td><td>WTI -3.9%; Brent -3.99% on Hegseth ceasefire reaffirmation</td><td>Oil-equity inverse</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+          <tr><td>May 5</td><td>M&amp;A</td><td>Big Tech</td><td>Wiz / Alphabet $32B all-cash advancing — FTC Ferguson test case</td><td>$32B</td><td><span class="badge badge-bull">BULLISH</span></td><td><span class="badge badge-high">HIGH</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL CHART: Bar -->
+<div class="section">
+  <div class="section-title">Chart 4 — Signal Distribution by Sector</div>
+  <div class="card">
+    <div class="card-header">Bar Chart · Bullish / Neutral / Bearish Signal Count by Sector</div>
+    <div class="card-body">
+      <div class="chart-wrap">
+        <canvas id="signalChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- WEEKLY MEMOS                           -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Weekly Market Memos — Week of Apr 28 – May 5, 2026</div>
+
+  <!-- MEMO 1: EQUITIES -->
+  <div class="memo">
+    <div class="memo-header">
+      <span class="memo-label">Equities</span>
+      <span class="memo-title">S&amp;P 500 &amp; Nasdaq — Weekly Memo</span>
+      <span class="memo-date">Week of Apr 28 – May 5, 2026</span>
+    </div>
+    <div class="memo-body">
+      <div class="memo-kv">
+        <div class="kv"><span class="kv-label">S&amp;P Close (May 5)</span><span class="kv-val pos">7,259.22</span></div>
+        <div class="kv"><span class="kv-label">Week Δ</span><span class="kv-val pos">+1.18%</span></div>
+        <div class="kv"><span class="kv-label">Nasdaq Close</span><span class="kv-val pos">25,326.13</span></div>
+        <div class="kv"><span class="kv-label">April MTD</span><span class="kv-val pos">+9.8%</span></div>
+        <div class="kv"><span class="kv-label">Goldman S&amp;P Target</span><span class="kv-val">7,600</span></div>
+      </div>
+      <p>April 2026 closed as the <strong>best monthly return for the S&amp;P 500 since April 2020</strong>, up approximately 9.8% from the March 31 benchmark of 6,528.52. The rally was structurally driven — not by rate cut expectations, but by an AI hardware capex super-cycle generating real earnings revisions across the semiconductor complex.</p>
+      <p>The week's defining session was <strong>May 5</strong>, when the S&amp;P reached a new all-time high of 7,259.22 alongside Nasdaq at 25,326.13 and a Russell 2000 intraday high. The catalyst was dual: Hegseth reaffirmed the US-Iran ceasefire intent, sending oil down ~4% intraday, which drove the equity-oil inverse correlation to maximum expression. VIX fell -6.8%. This is the cleanest expression of the Hormuz toggle thesis playing out in real time.</p>
+      <p>The week's only genuine risk session was <strong>May 4</strong>, when the UAE missile intercept produced a -0.41% pullback — brief and contained. The market's ability to absorb a geopolitical shock and close at ATH the following session demonstrates resilience of the current trend.</p>
+      <p><strong>Forward watch:</strong> Goldman's 7,600 year-end target implies roughly +4.7% from current levels. The key risk to this path is any downward revision in Mag7 AI capex guidance — particularly from Microsoft or Alphabet — which would directly undercut the earnings revision cycle powering the bull case. The Fed's H2 cut timing also remains unresolved; a hawkish surprise on the next NFP or CPI print could re-price the 10-year toward 4.6% and weigh on rate-sensitive sectors.</p>
+    </div>
+  </div>
+
+  <!-- MEMO 2: PRIVATE EQUITY -->
+  <div class="memo">
+    <div class="memo-header">
+      <span class="memo-label">Private Equity</span>
+      <span class="memo-title">PE &amp; M&amp;A Market — Weekly Memo</span>
+      <span class="memo-date">Week of Apr 28 – May 5, 2026</span>
+    </div>
+    <div class="memo-body">
+      <div class="memo-kv">
+        <div class="kv"><span class="kv-label">Q1 Deal Value</span><span class="kv-val pos">$154.6B</span></div>
+        <div class="kv"><span class="kv-label">YoY Growth</span><span class="kv-val pos">+12.6%</span></div>
+        <div class="kv"><span class="kv-label">Q1 Deal Count</span><span class="kv-val">614</span></div>
+        <div class="kv"><span class="kv-label">Megadeals (&gt;$10B)</span><span class="kv-val">22 (record)</span></div>
+        <div class="kv"><span class="kv-label">YTD Buybacks</span><span class="kv-val">$422B</span></div>
+      </div>
+      <p>The Q1 2026 aggregate data released May 1 confirmed what deal flow had been signaling all month: the PE megadeal cycle has definitively restarted. <strong>614 transactions totaling $154.6B</strong>, up 12.6% year-over-year, with a record 22 deals exceeding $10B. The bottleneck of 2023–2024 — driven by elevated rates and valuation bid-ask spreads — has cleared.</p>
+      <p><strong>Blackstone</strong> was the dominant institutional actor across the period. The firm closed the Hologic take-private ($18.3B EV with TPG), raised the largest-ever private life sciences fund ($6.3B, BXLS VI), and agreed the Senior plc UK aerospace take-private (£1.4B). Joe Baratta's comments on PE momentum building with US-Iran de-escalation signal Blackstone is positioning for an accelerating H2 dealmaking environment.</p>
+      <p>The <strong>$32B Wiz/Alphabet acquisition</strong> is the most consequential single deal of the window — not for its size but for its regulatory signal. This is the first major Big Tech acquisition to advance under FTC Chair Ferguson. Clearance would represent a meaningful deregulatory green light for the 2026 M&A pipeline, particularly in AI infrastructure and cybersecurity.</p>
+      <p><strong>Exit environment:</strong> Sponsor-to-sponsor transactions remain the dominant exit route. The IPO window has not reopened at scale. Secondary market pricing will be the clearest indicator of true NAV marks as this continues.</p>
+      <p><strong>Forward watch:</strong> Track Wiz/Alphabet FTC review progress. Monitor secondary market pricing spreads in healthcare and defense — Blackstone's concentration in both sectors means their portfolio marks matter to overall PE sentiment. The next Q2 aggregate will confirm whether the megadeal cadence from Q1 is accelerating or normalizing.</p>
+    </div>
+  </div>
+
+  <!-- MEMO 3: AI / TECH -->
+  <div class="memo">
+    <div class="memo-header">
+      <span class="memo-label">AI &amp; Technology</span>
+      <span class="memo-title">AI &amp; Semiconductor Sector — Weekly Memo</span>
+      <span class="memo-date">Week of Apr 28 – May 5, 2026</span>
+    </div>
+    <div class="memo-body">
+      <div class="memo-kv">
+        <div class="kv"><span class="kv-label">Hyperscaler Capex (2026E)</span><span class="kv-val">~$700B</span></div>
+        <div class="kv"><span class="kv-label">Meta AI Capex Guide</span><span class="kv-val">$115–135B</span></div>
+        <div class="kv"><span class="kv-label">Micron Market Cap</span><span class="kv-val pos">&gt;$700B</span></div>
+        <div class="kv"><span class="kv-label">AMD April MTD</span><span class="kv-val pos">+45%</span></div>
+        <div class="kv"><span class="kv-label">Goldman S&amp;P EPS Growth</span><span class="kv-val pos">+12%</span></div>
+      </div>
+      <p>The AI/semiconductor investment thesis is no longer speculative — it is being confirmed by real capital allocation and earnings results. Total 2026 hyperscaler AI capex is tracking at approximately <strong>$670–700B</strong> across the major platforms, with Meta alone guiding to $115–135B. These are not announced intentions; they are commitments flowing into Nvidia's order books, Micron's HBM lines, and AMD's data center chip pipeline.</p>
+      <p>The week's clearest confirmation was <strong>Micron's crossing of the $700B market cap threshold</strong> on May 5, with HBM (High Bandwidth Memory) sold out through the end of 2026. AI memory tightness — supply unable to keep pace with demand from training and inference workloads — is now a verified fact, not a projection.</p>
+      <p>The week also surfaced the first crack in AI sentiment: the <strong>WSJ report on OpenAI CFO Sarah Friar warning leadership about compute payment capacity</strong> (Apr 27) caused a -0.49% S&amp;P session. The market's sensitivity to this report — and its rapid recovery — tells you the AI bull case is priced in at a level where any perceived crack in the demand chain triggers immediate repricing. This should be treated as a calibration signal, not noise.</p>
+      <p><strong>Forward watch:</strong> Mag7 Q1 earnings capex commentary is the single most important near-term data point. Any downward revision from Microsoft, Alphabet, Amazon, or Meta would create meaningful downside. Conversely, upward revisions — consistent with pre-announcement tone — would extend the semiconductor rally. Also monitor DeepSeek's open-source model trajectory: sustained open-source capability improvement puts cost-deflationary pressure on closed-model API providers.</p>
+    </div>
+  </div>
+
+  <!-- MEMO 4: HEALTHCARE -->
+  <div class="memo">
+    <div class="memo-header">
+      <span class="memo-label">Healthcare</span>
+      <span class="memo-title">Healthcare &amp; Biopharma — Weekly Memo</span>
+      <span class="memo-date">Week of Apr 28 – May 5, 2026</span>
+    </div>
+    <div class="memo-body">
+      <div class="memo-kv">
+        <div class="kv"><span class="kv-label">Q1 Biopharma M&amp;A</span><span class="kv-val">$15.6B / 19 deals</span></div>
+        <div class="kv"><span class="kv-label">Medtech VC (Q1)</span><span class="kv-val">$2.2B / 66 rounds</span></div>
+        <div class="kv"><span class="kv-label">Biopharma IPOs (Q1)</span><span class="kv-val">6 / $1.8B raised</span></div>
+        <div class="kv"><span class="kv-label">Largest Deal</span><span class="kv-val">$18.3B (Hologic)</span></div>
+      </div>
+      <p>Healthcare was the most active sector by PE capital deployment in the period. The <strong>Hologic take-private</strong> ($18.3B EV, Blackstone/TPG) is the year's largest healthcare private equity transaction and confirms conviction that diagnostics and medical devices are undervalued in the public markets relative to their durable cash flow profiles. Blackstone's concurrent raise of the largest-ever private life sciences fund ($6.3B, BXLS VI) doubles down on this thesis.</p>
+      <p>The <strong>Sun Pharma/Organon acquisition</strong> ($11.75B) is the week's defining strategic deal — a large-cap generics rollup that signals pharma consolidation is accelerating even as the Trump drug pricing initiative reshapes the pricing landscape. The 14-company pricing agreement is a bifurcation event: companies inside the framework gain regulatory certainty; those outside face formulary and political exposure.</p>
+      <p><strong>Pfizer's Q1 earnings beat</strong> and reaffirmation of full-year guidance ($59.5–62.5B revenue) is an important stabilizer. It demonstrates that major pharma fundamentals remain intact even amid pricing politics — and that the buy-side's fear of a broad pharma earnings collapse is not materializing.</p>
+      <p>The <strong>FDA approval of Otarmeni</strong> (first gene therapy for rare genetic hearing loss) signals the agency continues advancing novel modalities, reducing concern that the drug pricing political environment is bleeding into regulatory conservatism.</p>
+      <p><strong>Forward watch:</strong> Track which major manufacturers remain outside the Trump pricing agreement as of Q2, and monitor payer/formulary response to holdouts. The orthopedics sub-sector is active (Archimed, Cinven, Gemspring, InTandem all noted Apr 26) — expect deal announcements here in H2. Watch J&amp;J/Atraverse Medical integration progress as a bellwether for medtech deal execution quality.</p>
+    </div>
+  </div>
+
+  <!-- MEMO 5: DEFENSE -->
+  <div class="memo">
+    <div class="memo-header">
+      <span class="memo-label">Defense</span>
+      <span class="memo-title">Defense &amp; Aerospace — Weekly Memo</span>
+      <span class="memo-date">Week of Apr 28 – May 5, 2026</span>
+    </div>
+    <div class="memo-body">
+      <div class="memo-kv">
+        <div class="kv"><span class="kv-label">FY27 Pentagon Base</span><span class="kv-val">$1.15T</span></div>
+        <div class="kv"><span class="kv-label">Reconciliation Supplement</span><span class="kv-val">$350B</span></div>
+        <div class="kv"><span class="kv-label">AF/SF Budget</span><span class="kv-val">$338.8B (record)</span></div>
+        <div class="kv"><span class="kv-label">Pentagon AI Request</span><span class="kv-val">$60B (FY27)</span></div>
+      </div>
+      <p>The FY2027 Pentagon budget request represents the most significant increase in US defense spending in modern history. A <strong>$1.15T base request</strong> plus a <strong>$350B reconciliation supplemental</strong> — if passed — would trigger a contract announcement wave across the prime contractors (Lockheed Martin, Northrop Grumman, Raytheon, Boeing, L3Harris). The Air Force and Space Force combined request of $338.8B is itself a record.</p>
+      <p>Private equity's recognition of this opportunity is crystallizing. The <strong>Blackstone/Senior plc take-private</strong> (£1.4B) is a direct bet on defense supply chain re-rating — Senior plc manufactures aerospace and defense components, meaning Blackstone is positioning below the prime contractor layer where the spending wave is most underpriced by public markets.</p>
+      <p>The <strong>Pentagon's $60B dedicated AI request for FY27</strong> — separate from the base budget — creates a new procurement category that advantages defense tech companies integrating AI into hardware, software, and decision systems. Palantir is the most obvious public market expression of this thesis.</p>
+      <p>The <strong>Northrop Grumman EGI-M delivery, Saab scaling to 20 Gripens/year, and Peru's F-16 Block 70 selection</strong> are all consistent with sustained international demand for Western defense platforms — a trend that should persist as NATO members accelerate spending toward 3–4% GDP targets.</p>
+      <p><strong>Forward watch:</strong> Congressional reconciliation vote on the $350B supplemental is the single most important legislative event for defense equities. Any passage would be a catalyst for immediate contract award announcements. Also monitor the Boeing MQ-25 Stingray first flight — successful naval drone demonstration validates the broader unmanned naval aviation investment thesis.</p>
+    </div>
+  </div>
+
+  <!-- MEMO 6: ENERGY -->
+  <div class="memo">
+    <div class="memo-header">
+      <span class="memo-label">Energy</span>
+      <span class="memo-title">Crude Oil &amp; Energy Markets — Weekly Memo</span>
+      <span class="memo-date">Week of Apr 28 – May 5, 2026</span>
+    </div>
+    <div class="memo-body">
+      <div class="memo-kv">
+        <div class="kv"><span class="kv-label">WTI (May 5)</span><span class="kv-val">$102.27</span></div>
+        <div class="kv"><span class="kv-label">Brent (May 5)</span><span class="kv-val">$109.87</span></div>
+        <div class="kv"><span class="kv-label">Brent-WTI Spread</span><span class="kv-val" style="color:var(--yellow)">$7.60</span></div>
+        <div class="kv"><span class="kv-label">Brent YoY</span><span class="kv-val pos">+66.9%</span></div>
+        <div class="kv"><span class="kv-label">Weekly Range (WTI)</span><span class="kv-val">$95 – $102.27</span></div>
+      </div>
+      <p>The week's most important energy development was <strong>May 4's WTI spike of +7.65% in a single session</strong> — triggered by a UAE missile intercept and US engagement with Iranian small boats near the Strait of Hormuz. This is the sharpest single-session oil move in the tracking period, and its speed (and subsequent reversal) illustrates precisely how geopolitically driven — rather than supply-fundamentals driven — the current oil market is.</p>
+      <p>The <strong>Brent-WTI spread</strong> is the key diagnostic instrument for this market. From April 24 onward, the spread consistently exceeded $10 — the tracker's geopolitical premium flag — peaking at $12.00 across April 28–May 1. The spread compression on May 4 (to $7.60 despite a WTI spike) reflects the physical market repricing to Hormuz risk while the diplomatic channel remains open.</p>
+      <p>The <strong>Brent YoY return of +66.9%</strong> by May 5 is not a spike — it is a structural repricing. This is twelve months of compounding geopolitical risk premium, supply constraint, and global demand recovery. The energy sector has not been this structurally elevated since the 2021–2022 post-COVID reopening, but the current premium is geopolitics-driven rather than demand-surprise-driven, which makes it more fragile to diplomatic resolution.</p>
+      <p>The <strong>equity-oil inverse correlation</strong> is the most tradeable relationship in this market right now. It is operating with near-perfect consistency: Hormuz risk on → oil up, equities down. Hormuz risk off → oil down, equities up. This toggle has now fired cleanly four times in the tracking window.</p>
+      <p><strong>Forward watch:</strong> Iran nuclear talks (Pakistan back-channel noted Apr 26). Any formal framework announcement would be a major oil deflationary event — model 10–15% WTI drawdown on a credible agreement, concurrent with 2–3% equity upside. Also monitor OPEC+ meeting dynamics and whether the higher oil environment is beginning to induce supply response from US shale.</p>
+    </div>
+  </div>
+
+</div>
+<!-- END MEMOS -->
+
+</main>
+
+<script>
+// ── CHART DEFAULTS ──
+Chart.defaults.color = '#9ca3af';
+Chart.defaults.borderColor = '#2a2f42';
+Chart.defaults.font.family = "'SF Mono', 'Fira Code', 'Consolas', monospace";
+Chart.defaults.font.size = 11;
+
+const LABELS_EQ = ['Apr 20','Apr 21','Apr 22','Apr 23','Apr 24','Apr 27','Apr 28','Apr 29','Apr 30','May 1','May 4','May 5'];
+const SP500     = [7109.14,7064.01,7137.90,7108.40,7165.08,7138.80,7173.91,7135.95,7155.00,7230.12,7200.75,7259.22];
+const MA5       = [7109.14,7086.58,7103.68,7104.86,7116.91,7122.84,7144.82,7144.43,7153.75,7166.76,7179.15,7196.21];
+const MA7       = [7109.14,7086.58,7103.68,7104.86,7116.91,7120.56,7128.18,7132.01,7145.01,7158.18,7171.37,7184.82];
+
+// ── CHART 1: EQUITY LINE ──
+new Chart(document.getElementById('equityChart'), {
+  type: 'line',
+  data: {
+    labels: LABELS_EQ,
+    datasets: [
+      {
+        label: 'S&P 500 Close',
+        data: SP500,
+        borderColor: '#4f8ef7',
+        backgroundColor: 'rgba(79,142,247,0.08)',
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: '#4f8ef7',
+        fill: true,
+        tension: 0.3,
+      },
+      {
+        label: '5-Day MA',
+        data: MA5,
+        borderColor: '#34d399',
+        borderWidth: 1.5,
+        borderDash: [5,4],
+        pointRadius: 0,
+        fill: false,
+        tension: 0.3,
+      },
+      {
+        label: '7-Day MA',
+        data: MA7,
+        borderColor: '#fbbf24',
+        borderWidth: 1.5,
+        borderDash: [3,3],
+        pointRadius: 0,
+        fill: false,
+        tension: 0.3,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'top', labels: { boxWidth: 12, padding: 16 } },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('en-US', {minimumFractionDigits:2})}`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: '#1f2436' } },
+      y: {
+        grid: { color: '#1f2436' },
+        ticks: { callback: v => v.toLocaleString() },
+        min: 7000,
+      }
+    }
+  }
+});
+
+// ── CHART 2: OIL LINE ──
+const LABELS_OIL = ['Apr 20','Apr 22','Apr 23','Apr 24','Apr 25','Apr 26','Apr 27','Apr 28','Apr 29','Apr 30','May 1','May 4','May 5'];
+const WTI   = [96.26,96.00,95.50,94.40,94.04,93.68,95.50,96.00,96.50,95.80,95.00,102.27,102.27];
+const BRENT = [96.26,96.50,96.00,105.33,105.33,105.20,107.00,108.00,108.50,107.80,107.00,109.87,109.87];
+const SPREAD= BRENT.map((b,i)=>+(b-WTI[i]).toFixed(2));
+
+new Chart(document.getElementById('oilChart'), {
+  type: 'line',
+  data: {
+    labels: LABELS_OIL,
+    datasets: [
+      {
+        label: 'WTI ($/bbl)',
+        data: WTI,
+        borderColor: '#f87171',
+        backgroundColor: 'rgba(248,113,113,0.07)',
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: '#f87171',
+        fill: true,
+        tension: 0.3,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Brent ($/bbl)',
+        data: BRENT,
+        borderColor: '#fbbf24',
+        backgroundColor: 'rgba(251,191,36,0.05)',
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: '#fbbf24',
+        fill: true,
+        tension: 0.3,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Spread (Brent−WTI)',
+        data: SPREAD,
+        borderColor: '#a78bfa',
+        borderWidth: 1.5,
+        borderDash: [4,3],
+        pointRadius: 3,
+        pointBackgroundColor: '#a78bfa',
+        fill: false,
+        tension: 0.3,
+        yAxisID: 'y2',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'top', labels: { boxWidth: 12, padding: 16 } },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: '#1f2436' } },
+      y: {
+        grid: { color: '#1f2436' },
+        ticks: { callback: v => `$${v}` },
+        min: 88,
+        title: { display: true, text: '$/bbl' }
+      },
+      y2: {
+        position: 'right',
+        grid: { drawOnChartArea: false },
+        ticks: { callback: v => `$${v}` },
+        title: { display: true, text: 'Spread ($)' },
+        min: 0,
+        max: 18,
+      }
+    }
+  }
+});
+
+// ── CHART 3a: PE DEAL BAR ──
+new Chart(document.getElementById('dealBarChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Healthcare','Pharma / Generics','Cybersecurity / AI','Life Sciences PE','Aerospace / Def','Automotive','Biopharma','Pharmacy / PBM'],
+    datasets: [{
+      label: 'Deal Value ($B)',
+      data: [18.3, 11.75, 32.0, 6.3, 1.9, 2.1, 2.2, 0],
+      backgroundColor: [
+        'rgba(79,142,247,0.75)',
+        'rgba(52,211,153,0.75)',
+        'rgba(251,191,36,0.75)',
+        'rgba(167,139,250,0.75)',
+        'rgba(248,113,113,0.75)',
+        'rgba(251,146,60,0.75)',
+        'rgba(34,211,238,0.75)',
+        'rgba(107,114,128,0.4)',
+      ],
+      borderWidth: 0,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` $${ctx.parsed.y.toFixed(1)}B`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxRotation: 35, minRotation: 20 } },
+      y: {
+        grid: { color: '#1f2436' },
+        ticks: { callback: v => `$${v}B` },
+      }
+    }
+  }
+});
+
+// ── CHART 3b: DEAL PIE ──
+new Chart(document.getElementById('dealPieChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Healthcare ($18.3B)','Pharma/Generics ($11.75B)','Cybersecurity/AI ($32B)','Life Sciences PE ($6.3B)','Aerospace/Def ($1.9B)','Automotive ($2.1B)','Biopharma ($2.2B)'],
+    datasets: [{
+      data: [18.3, 11.75, 32.0, 6.3, 1.9, 2.1, 2.2],
+      backgroundColor: [
+        'rgba(79,142,247,0.85)',
+        'rgba(52,211,153,0.85)',
+        'rgba(251,191,36,0.85)',
+        'rgba(167,139,250,0.85)',
+        'rgba(248,113,113,0.85)',
+        'rgba(251,146,60,0.85)',
+        'rgba(34,211,238,0.85)',
+      ],
+      borderWidth: 2,
+      borderColor: '#1c2030',
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '55%',
+    plugins: {
+      legend: { position: 'right', labels: { boxWidth: 10, padding: 10, font: { size: 10 } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.label}: ${(ctx.parsed / ctx.dataset.data.reduce((a,b)=>a+b,0)*100).toFixed(1)}%`
+        }
+      }
+    }
+  }
+});
+
+// ── CHART 4: SIGNAL BAR ──
+// Sectors: AI, M&A/PE, Healthcare, Defense, Macro, Equities, Energy
+const sigSectors = ['AI / Tech','M&A / PE','Healthcare','Defense','Macro','Equities','Energy'];
+const bullish = [3, 5, 4, 2, 0, 2, 1];
+const neutral = [0, 0, 1, 0, 1, 0, 0];
+const bearish = [0, 0, 0, 1, 0, 0, 0];
+
+new Chart(document.getElementById('signalChart'), {
+  type: 'bar',
+  data: {
+    labels: sigSectors,
+    datasets: [
+      {
+        label: 'Bullish',
+        data: bullish,
+        backgroundColor: 'rgba(52,211,153,0.8)',
+        borderRadius: 4,
+        borderWidth: 0,
+      },
+      {
+        label: 'Neutral',
+        data: neutral,
+        backgroundColor: 'rgba(251,191,36,0.7)',
+        borderRadius: 4,
+        borderWidth: 0,
+      },
+      {
+        label: 'Bearish',
+        data: bearish,
+        backgroundColor: 'rgba(248,113,113,0.8)',
+        borderRadius: 4,
+        borderWidth: 0,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top', labels: { boxWidth: 12, padding: 16 } },
+    },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: {
+        stacked: true,
+        grid: { color: '#1f2436' },
+        ticks: { stepSize: 1 },
+        title: { display: true, text: 'Signal Count' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
