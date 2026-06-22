@@ -42,11 +42,21 @@ Tasks (≤15 research loops):
 3. Append new rows to sections 2 (S&P Tracker), 2b (Oil Tracker), and 3 (Sector Intelligence
    Log). Refresh the Status Board (section 1). Flag thesis changes in section 4. Update
    portfolio implications (section 5) if warranted. Add all sources to section 6.
-4. UPDATE THE GOOGLE DRIVE DOCUMENT: create a new companion file in the Financial markets
-   folder (parentId 1UpoxDkHNnDbPEWOJFb8TUN7UYu-JUUGF) titled
-   "MI PE Tracker — Companion Update YYYY-MM-DD (Cycle N)" containing the refreshed status
-   board, the day's key data points with sources, thesis summary, signals watchlist,
-   highest-conviction idea, and biggest risk.
+4. UPDATE THE GOOGLE DRIVE SPREADSHEETS (NOT Google Docs — use structured spreadsheets so the
+   numbers are queryable "actual knowledge"). Two canonical companion spreadsheets live in the
+   Financial markets folder (parentId 1UpoxDkHNnDbPEWOJFb8TUN7UYu-JUUGF):
+   - "MI PE Tracker — Market Data (Cycles 1-3)" (id 1C-YKZ8ho4YseFyEuBUMko-3SV-JbvXij2GiSNadn9QI)
+     Columns: Date, Cycle, S&P 500 Close, S&P Daily %, Nasdaq Close, Nasdaq Daily %, Dow Daily %,
+     WTI, Brent, 10Y Yield, Fed Funds, Signal, Key Note, Source
+   - "MI PE Tracker — Deal Register & Signals (Cycles 1-3)" (id 1QdS3RAVEm0faQWdZWVC6Fjv74bZnVp63DPnDBkhtH2g)
+     Columns: Date, Sector, Headline, Acquirer/Sponsor, Target, Value, Signal, Impact, Source
+   Append this cycle's rows. The Drive MCP create_file tool cannot append in place, so the
+   pattern is: read the existing sheet, add the new row(s), and re-create the spreadsheet via
+   create_file (contentMimeType text/csv → converts to a Google Sheet) with the full cumulative
+   data and an updated title "...(through Cycle N)". Keep ONE Market Data sheet and ONE Deal
+   Register sheet as the rolling source of truth — do not spawn a new doc per cycle. Always use
+   text/csv (spreadsheet), never text/plain (doc). Preserve all empty cells (consecutive commas)
+   so columns stay aligned.
 5. Commit tracker/MI_PE_Tracker.md with message "tracker: Cycle #N update (YYYY-MM-DD)"
    and push to branch claude/eloquent-pasteur-id8nr1.
 
@@ -80,9 +90,10 @@ Tasks:
    8. Suggested Positioning (Core / Opportunistic / Avoid)
    9. Highest-Conviction Idea This Week
    10. Biggest Risk to the Current Thesis Map
-4. UPDATE GOOGLE DRIVE: create the memo as a companion doc in the Financial markets folder
-   (parentId 1UpoxDkHNnDbPEWOJFb8TUN7UYu-JUUGF), titled
-   "MI PE Weekly Memo — Week ending YYYY-MM-DD".
+4. UPDATE GOOGLE DRIVE: the weekly memo narrative may be a Doc, BUT also append that week's
+   numeric rows to the two canonical SPREADSHEETS (Market Data + Deal Register, ids in Trigger 1)
+   so the structured data stays current. Spreadsheets are the source of truth for numbers; the
+   memo Doc is narrative only. Memo Doc title: "MI PE Weekly Memo — Week ending YYYY-MM-DD".
 5. Create a Gmail draft to ibernard1116@gmail.com, subject
    "Weekly PE/M&A Memo — Week ending [Friday date]", body = the memo.
 6. Commit memos/Weekly_Memo_YYYY-MM-DD.md and push to claude/eloquent-pasteur-id8nr1.
@@ -102,3 +113,10 @@ Tasks:
 | 1 | 2026-06-22 | Decoded canonical sheet (last logged Jun 5); extended → Jun 18. |
 | 2 | 2026-06-22 | Jun 18 close confirmed 7,500.58; H1 PE context; Drive companion created. |
 | 3 | 2026-06-23 | Jun 22 close; Nasdaq-100 rebalance; Montagu/BMC + NextEra/Caliber deals; oil premium fading. |
+
+## Drive output switched to spreadsheets (2026-06-23)
+Per user direction, numeric data now goes into **Google Sheets** (not Docs) for queryable "actual knowledge":
+- **Market Data sheet:** https://docs.google.com/spreadsheets/d/1C-YKZ8ho4YseFyEuBUMko-3SV-JbvXij2GiSNadn9QI/edit
+- **Deal Register sheet:** https://docs.google.com/spreadsheets/d/1QdS3RAVEm0faQWdZWVC6Fjv74bZnVp63DPnDBkhtH2g/edit
+
+Both seeded with Cycles 1–3. Future cycles append to these same two sheets (rolling source of truth).
