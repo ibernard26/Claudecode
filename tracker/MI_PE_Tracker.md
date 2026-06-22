@@ -9,7 +9,9 @@
 
 **Why this working layer exists:** the available Drive tools can read but **cannot edit the .xlsx in place**. This Markdown mirrors the sheet's exact structure + conventions and **extends** it (new cycle appended, history preserved, gaps marked). Git = the non-destructive change log. *To push these updates back into the Google Sheet itself, see the note at the end — that requires either manual paste or a Sheets-write integration not currently available.*
 
-**This update:** 2026-06-22 · **Daily Cycle #1 of ≤15** · extends canonical sheet from Jun 5 → latest completed trading day **Jun 18, 2026** (Jun 19 = Juneteenth holiday, markets closed; Jun 22 = today, not yet closed).
+**Cycle #1 update:** 2026-06-22 · extended canonical sheet Jun 5 → Jun 18, 2026.
+
+**This update:** 2026-06-22 · **Daily Cycle #2 of ≤15** · Jun 18 close confirmed as **7,500.58** (+1.08%); Jun 22 = open today, prior-close data logged; H1 2026 PE context captured.
 
 > **Convention inherited from the canonical sheet:** verifiable data only; no fabricated daily rows; gaps explicitly flagged; "🟡 NEW" = added this cycle.
 
@@ -20,8 +22,8 @@
 
 | Market / Sector | Latest Reading (as-of) | Δ vs prior tracker pts | Trend | Status |
 |---|---|---|---|---|
-| **S&P 500** | 7,420.10 (Jun 17 close) · +1.15% Jun 18 ≈7,505 | record 7,609.78 (Jun 2) → chip rout 7,383.74 (Jun 5) → Fed-day −1.21% | ⚠ whipsaw | REFRESHED |
-| **Nasdaq** | 26,021.66 (Jun 17) · +1.5% Jun 18 ≈26,412 | off Jun 2 record 27,093 | ⚠ chip-driven | REFRESHED |
+| **S&P 500** | **7,500.58** (Jun 18 close, confirmed +1.08%) · Jun 22 open (no close yet) | record 7,609.78 (Jun 2) → chip rout 7,383.74 (Jun 5) → Fed-day 7,420.10 (Jun 17) → recovery 7,500.58 (Jun 18) | ⚠ whipsaw recovery | REFRESHED |
+| **Nasdaq** | ≈26,412 (Jun 18, +1.5% est.) · Jun 22 open | off Jun 2 record 27,093 | ⚠ chip-driven | REFRESHED |
 | **WTI crude** | $77.54 (Jun 20) | $102.27 (May 5) → $93.45 (Jun 5) → $77.54 | ▼ premium fading | REFRESHED |
 | **Brent crude** | $80.57 (Jun 20) | $109.87 (May 5) → $97.44 (Jun 5) → $80.57 (−27%) | ▼ | REFRESHED |
 | **Fed funds** | 3.50–3.75% (held Jun 17) | **REGIME CHANGE: Powell→Warsh; 9/18 see HIKE in 2026** | ▲ hawkish | REFRESHED |
@@ -46,10 +48,11 @@ Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 | Jun 5 (canonical last) | 7,383.74 | −2.64% | — | ↑ | SELL | Chip rout SOX −10.3%; hot jobs; worst day since Oct 2025 |
 | 🟡 Jun 16 | (Dow −500) | — | — | ▲ spike | HOLD | Warsh first-meeting jitters; bond-yield surge |
 | 🟡 Jun 17 | **7,420.10** | −1.21% | **26,021.66** (−1.34%) | 4.46% | SELL | **Fed regime change**: held 3.50–3.75%; 9/18 see hike; worst new-Chair Fed-day since 1994 |
-| 🟡 Jun 18 | ≈7,505 (derived: +1.15%) | +1.15% | ≈26,412 (+1.5%) | 4.46% | BUY | Chips fuel comeback; **US ends Iran blockade**; Russell 2000 up |
+| 🟡 Jun 18 | **7,500.58** ✓ | **+1.08%** | ≈26,412 (+1.5% est.) | 4.46% | BUY | Chips fuel comeback; **US ends Iran blockade**; Russell 2000 up |
 | 🟡 Jun 19 | *closed* | — | *closed* | — | — | Juneteenth holiday |
+| 🟡🟡 Jun 22 | *open (prior close: 7,500.58)* | *intraday* | — | ~4.46% | MONITOR | Market reopens post-Juneteenth; Iran Hormuz re-closure risk front-page; Fed hike narrative digesting |
 
-*Jun 18 close marked derived (confirmed % move off confirmed Jun 17 close) per "no fabricated figures" convention — flagged as approximate, not logged as hard data.*
+*Jun 18 close confirmed at 7,500.58 (+1.08%) via BBNTimes/CNBC (Cycle #2 verification). Jun 22 no confirmed close yet.*
 
 ## 2b. OIL TRACKER — appended
 
@@ -72,6 +75,10 @@ Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 | 🟡 Jun 17 | Macro | **Fed regime change** — Warsh's first meeting; dots erase 2026 cuts, 9/18 project a hike | 3.50–3.75% | BEARISH (rate-sensitives) | HIGH |
 | 🟡 Jun 18–20 | Geopolitical | US ends Iran blockade → Iran re-closes Strait of Hormuz | ~20% global oil at risk | ⚠ two-sided | HIGH |
 | 🟡 May | Credit | **FSB warns on private-credit vulnerabilities**; Morgan Stanley flags potential **8% direct-lending default rate** (vs 2–2.5% hist.), concentrated in AI-disrupted software | — | BEARISH | HIGH |
+| 🟡🟡 H1 2026 | PE / M&A | **H1 2026 PE deal count −67% vs H1 2025** but aggregate deal *value* +10% — barbell: sponsors concentrating on high-conviction mega/mid positions; deal count starved, value concentrated | — | ◼ STRUCTURAL | HIGH |
+| 🟡🟡 H1 2026 | PE / Healthcare | Healthcare most resilient sector: take-privates + platform roll-ups continuing at pace; business services + industrials mid-market buy-and-builds active; tech/consumer quiet (AI valuation uncertainty) | — | ▲ BULLISH | MEDIUM |
+| 🟡🟡 H1 2026 | PE / Exits | **Secondary transactions dominant exit route** (sponsor-to-sponsor + continuation vehicles); LP pressure for DPI (actual distributions) rising — GPs without credible DPI face fundraising headwinds | — | ◼ STRUCTURAL | HIGH |
+| 🟡🟡 Jun 20 | Geopolitical | Iran re-closed Strait of Hormuz (cites Israeli violations); Israel-Hezbollah ceasefire reached (tentative) → Brent $80.57, WTI $77.54 — premium decayed despite war | — | ⚠ two-sided | MEDIUM |
 
 ---
 
@@ -114,4 +121,11 @@ Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 - **Oil/geopolitics:** CNBC/Al Jazeera/Wikipedia — Brent $80.57/WTI $77.54 (Jun 20); Jun 17 Trump–Pezeshkian MOU (60-day path); Jun 19 Geneva talks postponed; Jun 20 Iran re-closed Hormuz; IEA "largest supply disruption in history."
 - **PE/M&A & credit:** PwC, PE Wire, CNBC, FSB (May 2026), Moody's/KBRA — EA $55B, WBA $23.7B, OneStream $6.4B; FSB warning; MS 8% default warning; TTM default ~1.8%.
 
-*Next cycle: next weekday 07:00 (Cycle #2). Recurrence mechanism: see chat — true unattended scheduling requires a Claude-Code-on-web scheduled trigger; this run = Cycle #1, executed on demand.*
+**Cycle #2 sources (2026-06-22):**
+- **Jun 18 S&P close confirmed:** BBNTimes — 7,500.58 (+1.08%); markets closed Jun 19 (Juneteenth) per CNBC/Yahoo.
+- **H1 2026 PE context:** PwC US Deals 2026 Midyear Outlook, Sidley Austin PE Retrospective — deal count −67% YoY; value +10%; barbell dynamic; healthcare + industrials most active; LP DPI pressure rising.
+- **Exits:** Secondary/continuation vehicles dominant per PwC, Daily Upside.
+- **Geopolitical:** Iran re-closed Hormuz Jun 20; Israel-Hezbollah ceasefire (tentative, Jun 20); oil Brent $80.57/WTI $77.54 per search results.
+- **Rates:** 10Y ~4.46% held post-Warsh meeting per FRED/CNBC context.
+
+*Next cycle: Cycle #3 — next weekday. Recurrence: Claude-Code-on-web scheduled trigger at 07:00 ET. This run = Cycle #2, executed on demand 2026-06-22.*
