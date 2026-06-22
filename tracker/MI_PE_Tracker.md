@@ -11,7 +11,9 @@
 
 **Cycle #1 update:** 2026-06-22 · extended canonical sheet Jun 5 → Jun 18, 2026.
 
-**This update:** 2026-06-22 · **Daily Cycle #2 of ≤15** · Jun 18 close confirmed as **7,500.58** (+1.08%); Jun 22 = open today, prior-close data logged; H1 2026 PE context captured.
+**Cycle #2 update:** 2026-06-22 · Jun 18 close confirmed 7,500.58; Jun 22 opened; H1 PE context added; Drive companion created.
+
+**This update:** 2026-06-23 · **Daily Cycle #3 of ≤15** · Jun 22 close confirmed; Nasdaq-100 quarterly rebalance logged; oil risk-premium fading; US-Iran talks progressing; new PE/M&A deals appended.
 
 > **Convention inherited from the canonical sheet:** verifiable data only; no fabricated daily rows; gaps explicitly flagged; "🟡 NEW" = added this cycle.
 
@@ -22,19 +24,19 @@
 
 | Market / Sector | Latest Reading (as-of) | Δ vs prior tracker pts | Trend | Status |
 |---|---|---|---|---|
-| **S&P 500** | **7,500.58** (Jun 18 close, confirmed +1.08%) · Jun 22 open (no close yet) | record 7,609.78 (Jun 2) → chip rout 7,383.74 (Jun 5) → Fed-day 7,420.10 (Jun 17) → recovery 7,500.58 (Jun 18) | ⚠ whipsaw recovery | REFRESHED |
-| **Nasdaq** | ≈26,412 (Jun 18, +1.5% est.) · Jun 22 open | off Jun 2 record 27,093 | ⚠ chip-driven | REFRESHED |
-| **WTI crude** | $77.54 (Jun 20) | $102.27 (May 5) → $93.45 (Jun 5) → $77.54 | ▼ premium fading | REFRESHED |
-| **Brent crude** | $80.57 (Jun 20) | $109.87 (May 5) → $97.44 (Jun 5) → $80.57 (−27%) | ▼ | REFRESHED |
+| **S&P 500** | **≈7,509** (Jun 22 close, +0.12%) · Dow +0.44% | record 7,609.78 (Jun 2) → chip rout 7,383.74 (Jun 5) → Fed-day 7,420.10 (Jun 17) → recovery 7,500.58 (Jun 18) → flat 7,509 (Jun 22) | ⚠ consolidating | REFRESHED |
+| **Nasdaq** | **≈26,341** (Jun 22 close, −0.27%) | Nasdaq-100 quarterly rebalance; CoreWeave + Rocket Lab added, both fell on index entry day | ⚠ rebalance drag | REFRESHED |
+| **WTI crude** | **~$74.30** (Jun 22) near lowest since early March | $102.27 (May 5) → $93.45 (Jun 5) → $77.54 (Jun 20) → ~$74.30 (Jun 22) | ▼▼ war premium fading | REFRESHED |
+| **Brent crude** | **~$78.41** (Jun 22, −2.1%) | $109.87 (May 5) → $80.57 (Jun 20) → ~$78.41 (Jun 22) | ▼▼ | REFRESHED |
 | **Fed funds** | 3.50–3.75% (held Jun 17) | **REGIME CHANGE: Powell→Warsh; 9/18 see HIKE in 2026** | ▲ hawkish | REFRESHED |
-| **10Y Treasury** | 4.46% (Jun 18) | 4.41% (Apr 29) → spiking on hot jobs + Warsh | ▲ | REFRESHED |
+| **10Y Treasury** | **~4.48%** (Jun 22) | 4.41% (Apr 29) → 4.46% (Jun 18 post-Warsh) → 4.48% (Jun 22, creeping up) | ▲ | REFRESHED |
 | **AI / Tech** | Bounced Jun 18, but Jun 5 SOX −10.3% (worst since 2020) | air-pocket fired once (Broadcom soft guide) | ⚠ crowded/twitchy | REFRESHED |
 | **M&A / PE** | Mega-LBOs + $36B AI private-credit deal | EA $55B, WBA $23.7B, OneStream $6.4B, Anthropic $36B | ▲ barbell | REFRESHED |
 | **Healthcare** | Biotech IPO window reopening (Parabilis $475M) | capital markets thawing | ▲ mild | REFRESHED |
 | **Defense** | Lockheed $1B+ contracts (Jun 5); Iran war | demand confirmed | ▲ | REFRESHED |
 | **Credit / Private Credit** | TTM default ~1.8% but **FSB + MS 8% warnings**; $36B into AI | stress + AI concentration building | ▼ fragile | REFRESHED |
 | **Regulatory** | FSB private-credit warning; FTC Ferguson test cases | tightening on credit | ◼ | REFRESHED |
-| **Geopolitical / Supply chain** | 2026 Iran War; US ended blockade Jun 18, **Iran re-closed Hormuz Jun 20** | volatile two-sided | ⚠ | REFRESHED |
+| **Geopolitical / Supply chain** | US-Iran 60-day MOU signed Jun 17; **VP Vance Jun 22**: talks set "good foundation"; Geneva tech talks ongoing; Hormuz still closed | de-escalation narrative building, oil premium deflating | ⚠ → ▼ risk | REFRESHED |
 
 Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 
@@ -50,9 +52,9 @@ Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 | 🟡 Jun 17 | **7,420.10** | −1.21% | **26,021.66** (−1.34%) | 4.46% | SELL | **Fed regime change**: held 3.50–3.75%; 9/18 see hike; worst new-Chair Fed-day since 1994 |
 | 🟡 Jun 18 | **7,500.58** ✓ | **+1.08%** | ≈26,412 (+1.5% est.) | 4.46% | BUY | Chips fuel comeback; **US ends Iran blockade**; Russell 2000 up |
 | 🟡 Jun 19 | *closed* | — | *closed* | — | — | Juneteenth holiday |
-| 🟡🟡 Jun 22 | *open (prior close: 7,500.58)* | *intraday* | — | ~4.46% | MONITOR | Market reopens post-Juneteenth; Iran Hormuz re-closure risk front-page; Fed hike narrative digesting |
+| 🟡🟡 Jun 22 | **≈7,509** | **+0.12%** | ≈26,341 (−0.27%) | ~4.48% | HOLD | Nasdaq-100 quarterly rebalance; CoreWeave + Rocket Lab added, both fell on first day in index; Dow +0.44%; oil risk premium fading further |
 
-*Jun 18 close confirmed at 7,500.58 (+1.08%) via BBNTimes/CNBC (Cycle #2 verification). Jun 22 no confirmed close yet.*
+*Jun 22 close derived from reported percentage moves off confirmed Jun 18 close (7,500.58). Flagged as derived per convention.*
 
 ## 2b. OIL TRACKER — appended
 
@@ -79,6 +81,10 @@ Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 | 🟡🟡 H1 2026 | PE / Healthcare | Healthcare most resilient sector: take-privates + platform roll-ups continuing at pace; business services + industrials mid-market buy-and-builds active; tech/consumer quiet (AI valuation uncertainty) | — | ▲ BULLISH | MEDIUM |
 | 🟡🟡 H1 2026 | PE / Exits | **Secondary transactions dominant exit route** (sponsor-to-sponsor + continuation vehicles); LP pressure for DPI (actual distributions) rising — GPs without credible DPI face fundraising headwinds | — | ◼ STRUCTURAL | HIGH |
 | 🟡🟡 Jun 20 | Geopolitical | Iran re-closed Strait of Hormuz (cites Israeli violations); Israel-Hezbollah ceasefire reached (tentative) → Brent $80.57, WTI $77.54 — premium decayed despite war | — | ⚠ two-sided | MEDIUM |
+| 🟡🟡🟡 Jun 19 | PE / Industrials | **Montagu acquires BMC Helix** (carve-out from BMC Software) — mid-market enterprise software carve-out; validates thesis that AI-disruption pressure is shaking loose non-core divisions at complexity discounts | n/d | ▲ BULLISH (carve-out thesis) | MEDIUM |
+| 🟡🟡🟡 Jun ~19 | PE / Energy | **NextEra Energy acquires Caliber Resource Partners** (~$1.3B) + JV with Quantum Capital Group — strategic utility/PE hybrid deal; energy infrastructure consolidation in the higher-for-longer environment | $1.3B | ▲ BULLISH (energy infra) | MEDIUM |
+| 🟡🟡🟡 Jun 22 | Equities / Index | **Nasdaq-100 quarterly rebalance**: CoreWeave + Rocket Lab added; both fell on entry day — classic "buy the rumor, sell the news" for crowded consensus AI names; index concentration risk highlighted | — | ⚠ MONITOR | MEDIUM |
+| 🟡🟡🟡 Jun 22 | Geopolitical / Oil | **VP Vance** says US-Iran talks set "good foundation"; tech talks continue; **Brent ~$78.41** (−2.1%), WTI ~$74.30 — war risk premium draining as deal odds improve; Hormuz still physically closed | — | ▼ (spot oil) / ▲ (risk assets) | HIGH |
 
 ---
 
@@ -90,9 +96,9 @@ Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 | **AI infra picks-and-shovels > AI chip equities** (HV electrical svcs, thermal, grid) | ▲ STRENGTHENED | *Confirm:* Jun 5 SOX −10.3% air-pocket showed chip-equity fragility; physical layer unaffected, rate-resilient, industrial multiples |
 | **Avoid late private credit / AI-credit concentration risk** | ▲▲ STRENGTHENED | *Confirm:* FSB warning; MS 8% warning; **$36B Apollo/Blackstone into Anthropic = PC piling into AI** (the concentration itself) |
 | **Defense (incl. Tier 3/4 sub-tier)** | ▲ STRENGTHENED | *Confirm:* Lockheed $1B+ contracts (incl. F-35 Lot 18-19); Iran war sustains munitions demand |
-| **Energy security / grid / firm-power (durable)** | ◼ UNCHANGED (strong) | War sustains the structural case even as *spot oil* falls — separates durable signal from price noise |
-| **Spot-oil directional bet** | ⚠ MONITOR (noise) | Brent round-tripped 109.87→80.57 despite active war; premium fades on ceasefire optimism — treat as noise |
-| **Mid-market carve-outs / distressed & rescue capital** | ▲ STRENGTHENED | Higher-for-longer + PC stress → more forced sellers, covenant stress, fallen-angel software LBOs opening |
+| **Energy security / grid / firm-power (durable)** | ◼ UNCHANGED (strong) | War sustains structural case; NextEra/Caliber deal = utility-led energy consolidation; spot oil falling *confirms* the durable vs. noise split |
+| **Spot-oil directional bet** | ▼ WEAKENED further | Brent now ~$78 (from $109.87 May 5); VP Vance deal optimism Jun 22 accelerates premium deflation — confirmed noise |
+| **Mid-market carve-outs / distressed & rescue capital** | ▲▲ STRENGTHENED | Higher-for-longer + PC stress → more forced sellers; *Confirm:* Montagu/BMC Helix carve-out (Jun 19) = thesis executing in real time |
 | **Healthcare / biotech exits** | ▲ NEW (mild) | *Confirm:* Parabilis $475M IPO (2nd-largest 2026 biotech IPO) = capital-markets window reopening |
 | **AI-disrupts-incumbent-software (short/credit-risk)** | ◼ UNCHANGED | MS flags defaults concentrating in AI-exposed software; watch for first named impairment |
 | **PFAS/water O&M, fire & life-safety, vocational, death-care float, North Asia succession** | ◼ UNCHANGED | No contradicting data; mandated/demographic/FX drivers intact |
@@ -128,4 +134,11 @@ Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 - **Geopolitical:** Iran re-closed Hormuz Jun 20; Israel-Hezbollah ceasefire (tentative, Jun 20); oil Brent $80.57/WTI $77.54 per search results.
 - **Rates:** 10Y ~4.46% held post-Warsh meeting per FRED/CNBC context.
 
-*Next cycle: Cycle #3 — next weekday. Recurrence: Claude-Code-on-web scheduled trigger at 07:00 ET. This run = Cycle #2, executed on demand 2026-06-22.*
+**Cycle #3 sources (2026-06-23):**
+- **Jun 22 equities:** TheStreet — S&P +0.12%, Nasdaq −0.27%, Dow +0.44%; Nasdaq-100 quarterly rebalance; CoreWeave + Rocket Lab added, both fell on entry day.
+- **Jun 22 oil:** Brent ~$78.41 (−2.1%), WTI ~$74.30 (near lowest since early March) per TradingEconomics/OilPrice context — US-Iran deal optimism draining risk premium.
+- **Rates:** 10Y ~4.48% on Jun 22 (crept up 2bps); Warsh declined to guide on next move; Schwab/FRED context.
+- **PE/M&A:** Montagu/BMC Helix carve-out (Jun 19); NextEra/Caliber Resource Partners ~$1.3B + Quantum Capital JV (Jun ~19); per PE Hub/Middle Market search results.
+- **Geopolitical:** VP Vance Jun 22 "good foundation" quote; Trump threats shook Jun 21 talks; 60-day MOU signed Jun 17 (Presidents Trump-Pezeshkian); Hormuz physically still closed (since Feb 28); 95% crude ship traffic reduction — per Wikipedia 2026 Strait of Hormuz crisis, Britannica, Brookings, UK House of Commons Library.
+
+*Next cycle: Cycle #4 — next weekday. Recurrence: Claude-Code-on-web scheduled trigger at 07:00 ET. This run = Cycle #3, executed on demand 2026-06-23.*
