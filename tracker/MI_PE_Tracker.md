@@ -62,6 +62,7 @@ Legend: ▲ rising · ▼ falling · ◼ flat/mixed · ⚠ high volatility
 |---|---|---|---|---|
 | Jun 5 (canonical last) | $93.45 | $97.44 | $3.99 | Mideast premium fading; growth/yield fears |
 | 🟡 Jun 20 | $77.54 | $80.57 | $3.03 | US ended blockade Jun 18 → tankers exit; **Iran re-closed Hormuz Jun 20** (cites Israeli violations); Lebanon fighting; Geneva talks postponed Jun 19 |
+| 🟡🟡🟡 Jun 22 | ~$74.30 | ~$78.41 | ~$4.11 | **VP Vance** "good foundation" on US-Iran deal (Jun 22); war risk premium draining; Brent −2.1% on day; WTI near lowest since early March — Hormuz physically still closed but deal odds rising |
 
 ---
 
