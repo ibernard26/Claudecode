@@ -90,10 +90,14 @@ Tasks:
    8. Suggested Positioning (Core / Opportunistic / Avoid)
    9. Highest-Conviction Idea This Week
    10. Biggest Risk to the Current Thesis Map
-4. UPDATE GOOGLE DRIVE: the weekly memo narrative may be a Doc, BUT also append that week's
-   numeric rows to the two canonical SPREADSHEETS (Market Data + Deal Register, ids in Trigger 1)
-   so the structured data stays current. Spreadsheets are the source of truth for numbers; the
-   memo Doc is narrative only. Memo Doc title: "MI PE Weekly Memo — Week ending YYYY-MM-DD".
+4. UPDATE GOOGLE DRIVE — SPREADSHEETS ONLY (no Google Docs): append that week's numeric rows
+   to BOTH canonical Google Sheets in the Financial markets folder:
+   - Market Data sheet (id 1C-YKZ8ho4YseFyEuBUMko-3SV-JbvXij2GiSNadn9QI): add daily equity/oil/rates rows
+   - Deal Register sheet (id 1QdS3RAVEm0faQWdZWVC6Fjv74bZnVp63DPnDBkhtH2g): add any new deals/signals
+   Use contentMimeType text/csv → Google Sheets conversion. Read existing sheet data first, append
+   new rows, re-create with full cumulative data. Title pattern: "MI PE Tracker — Market Data
+   (through Cycle N)" and "MI PE Tracker — Deal Register & Signals (through Cycle N)".
+   NO Google Docs — all Drive output is spreadsheets.
 5. Create a Gmail draft to ibernard1116@gmail.com, subject
    "Weekly PE/M&A Memo — Week ending [Friday date]", body = the memo.
 6. Commit memos/Weekly_Memo_YYYY-MM-DD.md and push to claude/eloquent-pasteur-id8nr1.
