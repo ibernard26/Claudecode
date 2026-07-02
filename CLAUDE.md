@@ -10,11 +10,13 @@ spreadsheet; this repo is the working layer that extends, analyses, and publishe
 | File | `MI PE Tracking System v1.xlsx` |
 | Drive path | `My Drive → Market research → Financial markets` |
 | File ID | `1WnTvf-CKyj-p8FSZQBDQEEn6ISFj1Fne` |
-| Last canonical entry | June 5, 2026 (sheet note: automation lapsed May 6–Jun 4) |
+| Last canonical entry | June 5, 2026 (Drive original; automation lapsed May 6–Jun 4) |
+| Repo canonical workbook | `MI_PE_Tracking_System.xlsx` — continuous Apr 20 → today; May 6–Jun 4 backfilled with verified milestones; the loop appends here every cycle |
 
 ## Project structure
 ```
 CLAUDE.md                          ← this file (auto-loaded by Claude Code)
+MI_PE_Tracking_System.xlsx         ← CANONICAL 5-tab workbook, primary loop target (Apr 20→today)
 tracker/MI_PE_Tracker.md           ← living working layer (append-only, never delete rows)
 memos/Weekly_Memo_YYYY-MM-DD.md    ← Saturday weekly memos
 automation/daily_tracker_loop.md   ← loop prompt + cron config for both triggers

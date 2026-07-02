@@ -57,8 +57,17 @@ Tasks (≤15 research loops):
    Register sheet as the rolling source of truth — do not spawn a new doc per cycle. Always use
    text/csv (spreadsheet), never text/plain (doc). Preserve all empty cells (consecutive commas)
    so columns stay aligned.
-5. Commit tracker/MI_PE_Tracker.md with message "tracker: Cycle #N update (YYYY-MM-DD)"
-   and push to branch claude/eloquent-pasteur-id8nr1.
+5. UPDATE THE CANONICAL WORKBOOK `MI_PE_Tracking_System.xlsx` (repo root) — the real 5-tab
+   structure and now the primary loop target. Load it with openpyxl, append this cycle's rows to:
+   - "Master Log MI_PE" (Date, S&P 500, S&P Δ%, Nasdaq, Nasdaq Δ%, WTI, Brent, AI/Tech Signal,
+     M&A/PE Signal, Healthcare Signal, Defense Signal, Oil Signal, Key Macro Theme, Notes)
+   - "S&P 500 Tracker" (Date, Close, Daily Δ, Daily Δ%, 5-Day MA, 7-Day MA, MTD%, Signal, YTD Context, Notes)
+   - "Oil Tracker" (Date, WTI, Brent, WTI-Brent Spread, WTI Δ%, Brent MTD%, Brent YoY%, Geo Driver)
+   - "Sector Intelligence Log" (Date, Sector, Category, Headline, Value/Metric, Signal, Source/Context, Impact)
+   Update "Master Log MI_PE"!A2 timestamp each touch. Never delete rows; flag any gap, never fabricate.
+   Continuous coverage is Apr 20 2026 → today (May 6–Jun 4 backfilled with verified milestones).
+6. Commit tracker/MI_PE_Tracker.md AND MI_PE_Tracking_System.xlsx with message
+   "tracker: Cycle #N update (YYYY-MM-DD)" and push to branch claude/eloquent-pasteur-id8nr1.
 
 Stop after 15 research-update loops.
 ```

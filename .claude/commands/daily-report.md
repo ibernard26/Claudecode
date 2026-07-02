@@ -24,7 +24,11 @@ Execute the full MI PE Tracker daily cycle. Run this every weekday morning (or o
    - Append new rows to each, then re-create both as Google Sheets via `create_file` with `contentMimeType: text/csv`
    - Updated titles: `MI PE Tracker — Market Data (through Cycle N)` and `MI PE Tracker — Deal Register & Signals (through Cycle N)`
    - Drive folder: `1UpoxDkHNnDbPEWOJFb8TUN7UYu-JUUGF`
-5. **Write outputs** — save a dated summary to `outputs/daily-brief-YYYY-MM-DD.md`
+5. **Update the canonical workbook** — append this cycle's rows to `MI_PE_Tracking_System.xlsx`
+   (repo root) across its 5 tabs (Master Log MI_PE, S&P 500 Tracker, Oil Tracker, Sector
+   Intelligence Log) via openpyxl; update the Master Log A2 timestamp. Never delete rows; flag
+   gaps, never fabricate. This is the primary structured loop target.
+6. **Write outputs** — save a dated summary to `outputs/daily-brief-YYYY-MM-DD.md`
 6. **Commit and push**:
    ```
    git add tracker/MI_PE_Tracker.md outputs/daily-brief-YYYY-MM-DD.md
