@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isaiah Bernard — Logistics Resume Package</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --blue: #2c4a8c;
+    --accent: #3a6bc4;
+    --light-blue: #e8eef8;
+    --gray: #555;
+    --light-gray: #f5f6f8;
+    --border: #d0d7e4;
+    --text: #1c1c1c;
+    --white: #fff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: var(--text);
+    background: #e9ecf2;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ─── Navigation ─── */
+  .nav {
+    background: var(--navy);
+    color: var(--white);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+  }
+  .nav-brand { font-weight: 700; font-size: 16px; flex: 1; min-width: 200px; }
+  .nav-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .nav-tab {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #ccd8f0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover, .nav-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+  }
+
+  /* ─── Sections ─── */
+  .section { display: none; padding: 28px 20px; max-width: 900px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* ─── Resume Card ─── */
+  .resume-card {
+    background: var(--white);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    padding: 40px 44px;
+    margin-bottom: 20px;
+  }
+
+  .resume-header { border-bottom: 3px solid var(--navy); padding-bottom: 16px; margin-bottom: 20px; }
+  .resume-name { font-size: 28px; font-weight: 800; color: var(--navy); letter-spacing: 0.5px; }
+  .resume-title { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 8px; }
+  .resume-contact { font-size: 12px; color: var(--gray); display: flex; flex-wrap: wrap; gap: 14px; margin-top: 6px; }
+  .resume-contact span::before { content: "• "; color: var(--accent); }
+  .resume-contact span:first-child::before { content: ""; }
+
+  .section-heading {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-bottom: 2px solid var(--light-blue);
+    padding-bottom: 4px;
+    margin: 20px 0 10px;
+  }
+
+  .summary-text { font-size: 13px; color: var(--gray); line-height: 1.65; }
+
+  /* Skills grid */
+  .skills-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-pill {
+    background: var(--light-blue);
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  /* Experience */
+  .exp-item { margin-bottom: 18px; }
+  .exp-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 4px; }
+  .exp-title { font-weight: 700; font-size: 14px; color: var(--navy); }
+  .exp-date { font-size: 11px; color: var(--gray); font-weight: 600; white-space: nowrap; }
+  .exp-company { font-size: 12px; font-weight: 600; color: var(--accent); margin: 2px 0; }
+  .exp-loc { font-size: 11px; color: var(--gray); }
+  .exp-bullets { margin: 8px 0 0 16px; }
+  .exp-bullets li { font-size: 13px; color: var(--gray); margin-bottom: 4px; line-height: 1.55; }
+
+  /* Education */
+  .edu-item { margin-bottom: 12px; }
+  .edu-name { font-weight: 700; font-size: 13px; color: var(--navy); }
+  .edu-detail { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+  /* Add'l section */
+  .clearance-bar {
+    background: #f0f4ff;
+    border-left: 4px solid var(--accent);
+    padding: 8px 14px;
+    border-radius: 0 4px 4px 0;
+    font-size: 12px;
+    color: var(--navy);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  /* ─── Support Materials ─── */
+  .materials-card {
+    background: var(--white);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .materials-card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .materials-card h2 .icon {
+    width: 28px; height: 28px;
+    background: var(--light-blue);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .linkedin-box {
+    background: var(--light-gray);
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.7;
+    border-left: 4px solid #0077b5;
+  }
+
+  .pitch-box {
+    background: var(--light-gray);
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.7;
+    border-left: 4px solid var(--accent);
+  }
+
+  .keyword-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+  .keyword-pill {
+    background: #fff;
+    border: 1px solid var(--border);
+    color: var(--navy);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 14px;
+  }
+
+  .job-title-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .job-pill {
+    background: var(--navy);
+    color: var(--white);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5px 13px;
+    border-radius: 14px;
+  }
+
+  .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 6px 0 14px; }
+  .badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-v1 { background: #dff0d8; color: #2d6a2d; }
+  .badge-v2 { background: #dce8ff; color: #1a2744; }
+
+  @media print {
+    .nav, .nav-tabs, .section-toggle { display: none !important; }
+    .section { display: block !important; max-width: 100%; padding: 0; }
+    .resume-card { box-shadow: none; padding: 20px 0; }
+    body { background: white; }
+  }
+
+  @media (max-width: 600px) {
+    .resume-card { padding: 24px 18px; }
+    .resume-name { font-size: 22px; }
+    .materials-card { padding: 20px 16px; }
+    .nav { padding: 10px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">Isaiah Bernard — Resume Package</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="show('v1')">Version 1 · Logistics / Supply Chain</button>
+    <button class="nav-tab" onclick="show('v2')">Version 2 · Defense / Government</button>
+    <button class="nav-tab" onclick="show('support')">Support Materials</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     VERSION 1 — Logistics / Supply Chain Coordinator
+═══════════════════════════════════════════════════════════════ -->
+<div id="v1" class="section active">
+  <div class="badge-row" style="max-width:900px;margin:16px auto 4px;">
+    <span class="badge badge-v1">Version 1</span>
+    <span style="font-size:12px;color:#555;align-self:center;">Optimized for Logistics Coordinator · Supply Chain · Warehouse · Operations roles</span>
+  </div>
+  <div class="resume-card">
+
+    <div class="resume-header">
+      <div class="resume-name">ISAIAH BERNARD</div>
+      <div class="resume-title">Logistics Professional | U.S. Marine Corps Veteran</div>
+      <div class="resume-contact">
+        <span>Philadelphia, PA Metro</span>
+        <span>[Your Phone Number]</span>
+        <span>[Your Email Address]</span>
+        <span>[LinkedIn URL]</span>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="section-heading">Professional Summary</div>
+    <p class="summary-text">
+      U.S. Marine Corps veteran and logistics professional with a background spanning military embarkation, defense-contractor warehouse support, global freight operations, and civilian logistics coordination. Experienced in shipping and receiving, inventory control, cargo screening, order fulfillment, material handling, and documentation-driven supply chain workflows. Brings the discipline, procedural compliance, and attention to detail developed through military service and applied across government and commercial logistics environments. Eager to contribute to fast-paced operations teams as a logistics coordinator, supply chain specialist, or operations support professional.
+    </p>
+
+    <!-- Skills -->
+    <div class="section-heading">Core Competencies</div>
+    <div class="skills-grid">
+      <span class="skill-pill">Logistics Coordination</span>
+      <span class="skill-pill">Supply Chain Operations</span>
+      <span class="skill-pill">Warehouse Operations</span>
+      <span class="skill-pill">Shipping & Receiving</span>
+      <span class="skill-pill">Inventory Control</span>
+      <span class="skill-pill">Cycle Counts</span>
+      <span class="skill-pill">Order Fulfillment</span>
+      <span class="skill-pill">Pick Tickets</span>
+      <span class="skill-pill">Receiving Inspections</span>
+      <span class="skill-pill">Cargo Screening</span>
+      <span class="skill-pill">Freight Handling</span>
+      <span class="skill-pill">Material Handling</span>
+      <span class="skill-pill">Transportation Coordination</span>
+      <span class="skill-pill">Property Accountability</span>
+      <span class="skill-pill">Discrepancy Resolution</span>
+      <span class="skill-pill">Documentation & Compliance</span>
+      <span class="skill-pill">Safety Procedures</span>
+      <span class="skill-pill">SAP Navy ERP</span>
+      <span class="skill-pill">GCSS-MC</span>
+      <span class="skill-pill">Microsoft Excel</span>
+      <span class="skill-pill">Team Collaboration</span>
+      <span class="skill-pill">Fast-Paced Operations</span>
+      <span class="skill-pill">Attention to Detail</span>
+    </div>
+
+    <!-- Work Experience -->
+    <div class="section-heading">Work Experience</div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-title">Logistics Coordinator</div>
+        <div class="exp-date">January 2026 – Present</div>
+      </div>
+      <div class="exp-company">Life Support International</div>
+      <div class="exp-loc">Langhorne, PA</div>
+      <ul class="exp-bullets">
+        <li>Process pick tickets and coordinate order fulfillment for life-support and safety-related product lines, ensuring accurate and timely material movement.</li>
+        <li>Manage inbound receiving operations, conducting material inspections and applying status classifications (R1, R2, Q2, Q3) to maintain inventory accuracy.</li>
+        <li>Coordinate ULine supply orders and warehouse replenishment to support ongoing logistics and operational needs.</li>
+        <li>Organize and route inventory throughout the warehouse, ensuring proper documentation, labeling, and material flow across receiving, staging, and fulfillment areas.</li>
+        <li>Support daily logistics operations with a focus on accuracy, compliance, and procedural discipline in a high-accountability environment.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-title">Screener — Freight & Cargo Operations</div>
+        <div class="exp-date">April 2025 – August 2025</div>
+      </div>
+      <div class="exp-company">DHL Global Forwarding</div>
+      <div class="exp-loc">Newark, NJ Area</div>
+      <ul class="exp-bullets">
+        <li>Performed cargo screening operations in a global freight forwarding environment, ensuring shipment accuracy and adherence to security and compliance standards.</li>
+        <li>Processed air cargo and freight shipments in a fast-paced, high-volume logistics setting while following operational safety and security procedures.</li>
+        <li>Maintained procedural discipline and documentation awareness across regulated freight handling workflows.</li>
+        <li>Contributed to smooth freight movement by monitoring shipment readiness, cargo integrity, and compliance checkpoints throughout the screening process.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-title">Warehouse Specialist / Logistician</div>
+        <div class="exp-date">[Month Year] – [Month Year]</div>
+      </div>
+      <div class="exp-company">AdSync Technologies</div>
+      <div class="exp-loc">Philadelphia Navy Yard, PA (NSWCPD Support Environment)</div>
+      <ul class="exp-bullets">
+        <li>Supported warehouse operations for a government/defense-adjacent environment, handling shipping, receiving, inventory tracking, and material disposition workflows.</li>
+        <li>Conducted cycle counts and assisted with discrepancy resolution to maintain accurate accountability of government materials and equipment.</li>
+        <li>Worked within ETIDS, DMSMS, and DRMO property disposition frameworks, ensuring materials were processed and documented in compliance with established procedures.</li>
+        <li>Organized and maintained warehouse stock to support ongoing logistics requirements for defense programs at NSWCPD.</li>
+        <li>Operated in a structured, accountability-driven environment requiring precision documentation, attention to detail, and professionalism.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-title">Embarkation & Logistics Specialist — MOS 0431/0441</div>
+        <div class="exp-date">[Start Year] – [End Year]</div>
+      </div>
+      <div class="exp-company">U.S. Marine Corps Reserve</div>
+      <div class="exp-loc">MAG-49 | Rank: Lance Corporal</div>
+      <ul class="exp-bullets">
+        <li>Supported military logistics, embarkation planning, and transportation coordination in support of training exercises including MAX-24 and Gunslinger 22.</li>
+        <li>Assisted with cargo movement planning, equipment accountability, deployment documentation, and sustainment coordination for unit-level operations.</li>
+        <li>Applied knowledge of military logistics frameworks including MDMP, sustainment planning, and APS-5 concepts to support operational readiness.</li>
+        <li>Utilized SAP Navy ERP and GCSS-MC to support property tracking and logistics management functions.</li>
+        <li>Developed strong operational discipline, procedural compliance, and teamwork skills in a high-accountability, mission-critical environment.</li>
+        <li>Previously held Secret security clearance for approximately five years; eligible for sponsorship and reinstatement.</li>
+      </ul>
+    </div>
+
+    <!-- Education -->
+    <div class="section-heading">Education</div>
+    <div class="edu-item">
+      <div class="edu-name">[College / University Name]</div>
+      <div class="edu-detail">Coursework — Business, Data Science, Mathematics &amp; Supply Chain Studies | [Start Year] – Present</div>
+    </div>
+
+    <!-- Additional -->
+    <div class="section-heading">Additional Information</div>
+    <div class="clearance-bar">Security Clearance: Previously held Secret clearance (~5 years) | Eligible for Sponsorship &amp; Reinstatement</div>
+    <div class="edu-item">
+      <div class="edu-name">Professional Development — In Progress / Planned</div>
+      <div class="edu-detail">Lean Six Sigma Yellow Belt &nbsp;|&nbsp; Microsoft Excel (Advanced) &nbsp;|&nbsp; DAU Logistics Coursework &nbsp;|&nbsp; IATA Certification &nbsp;|&nbsp; SAP Training &nbsp;|&nbsp; CAPM</div>
+    </div>
+
+  </div><!-- /resume-card -->
+</div><!-- /v1 -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     VERSION 2 — Defense Contractor / Government Logistics
+═══════════════════════════════════════════════════════════════ -->
+<div id="v2" class="section">
+  <div class="badge-row" style="max-width:900px;margin:16px auto 4px;">
+    <span class="badge badge-v2">Version 2</span>
+    <span style="font-size:12px;color:#555;align-self:center;">Optimized for Defense Contractor · Government Logistics · Federal Supply Chain roles</span>
+  </div>
+  <div class="resume-card">
+
+    <div class="resume-header">
+      <div class="resume-name">ISAIAH BERNARD</div>
+      <div class="resume-title">Logistics Specialist | Marine Corps Veteran | Defense Logistics Support</div>
+      <div class="resume-contact">
+        <span>Philadelphia, PA Metro</span>
+        <span>[Your Phone Number]</span>
+        <span>[Your Email Address]</span>
+        <span>[LinkedIn URL]</span>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="section-heading">Professional Summary</div>
+    <p class="summary-text">
+      U.S. Marine Corps veteran (MOS 0431/0441 — Embarkation &amp; Logistics Specialist) with a progressive background in military logistics, defense contractor warehouse support, and regulated freight operations. Experienced in property accountability, inventory control, material disposition (ETIDS/DMSMS/DRMO), cargo screening, and government logistics workflows. Previously held Secret security clearance and is eligible for reinstatement with sponsorship. Brings a military mindset of discipline, compliance, and mission focus to defense and government logistics environments. Seeking a Logistics Coordinator, Material Management Specialist, or Supply Chain Analyst role in a government-contracted or federal support setting.
+    </p>
+
+    <!-- Skills -->
+    <div class="section-heading">Core Competencies</div>
+    <div class="skills-grid">
+      <span class="skill-pill">Government Logistics</span>
+      <span class="skill-pill">Defense Logistics Support</span>
+      <span class="skill-pill">Military Logistics</span>
+      <span class="skill-pill">Property Accountability</span>
+      <span class="skill-pill">Inventory Control</span>
+      <span class="skill-pill">Material Disposition (DRMO/DMSMS)</span>
+      <span class="skill-pill">ETIDS</span>
+      <span class="skill-pill">SAP Navy ERP</span>
+      <span class="skill-pill">GCSS-MC</span>
+      <span class="skill-pill">Embarkation Planning</span>
+      <span class="skill-pill">Transportation Coordination</span>
+      <span class="skill-pill">Cargo Movement</span>
+      <span class="skill-pill">Sustainment Planning</span>
+      <span class="skill-pill">Shipping & Receiving</span>
+      <span class="skill-pill">Cycle Counts</span>
+      <span class="skill-pill">Discrepancy Resolution</span>
+      <span class="skill-pill">Freight & Cargo Screening</span>
+      <span class="skill-pill">Documentation & Compliance</span>
+      <span class="skill-pill">MDMP Familiarity</span>
+      <span class="skill-pill">APS-5 Concepts</span>
+      <span class="skill-pill">Security Clearance (Prior Secret)</span>
+      <span class="skill-pill">Microsoft Excel</span>
+      <span class="skill-pill">Attention to Detail</span>
+    </div>
+
+    <!-- Work Experience -->
+    <div class="section-heading">Work Experience</div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-title">Warehouse Specialist / Logistician</div>
+        <div class="exp-date">[Month Year] – [Month Year]</div>
+      </div>
+      <div class="exp-company">AdSync Technologies</div>
+      <div class="exp-loc">Philadelphia Navy Yard, PA — NSWCPD Support Environment</div>
+      <ul class="exp-bullets">
+        <li>Provided warehouse and logistics support in a government/defense environment at NSWCPD, performing shipping, receiving, inventory control, and material disposition activities.</li>
+        <li>Worked within ETIDS, DMSMS, and DRMO frameworks to process, document, and route government property and materials in compliance with federal logistics procedures.</li>
+        <li>Conducted cycle counts and resolved inventory discrepancies to ensure accurate material accountability throughout the warehouse.</li>
+        <li>Maintained rigorous documentation standards and accountability practices consistent with defense program requirements.</li>
+        <li>Operated with professionalism and reliability in a structured, compliance-driven logistics setting supporting naval defense operations.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-title">Embarkation & Logistics Specialist — MOS 0431/0441</div>
+        <div class="exp-date">[Start Year] – [End Year]</div>
+      </div>
+      <div class="exp-company">U.S. Marine Corps Reserve</div>
+      <div class="exp-loc">MAG-49 | Rank: Lance Corporal | Previously Held: Secret Security Clearance</div>
+      <ul class="exp-bullets">
+        <li>Served as an Embarkation &amp; Logistics Specialist, supporting unit-level logistics, transportation coordination, embarkation planning, and sustainment operations.</li>
+        <li>Assisted with cargo movement, equipment tracking, deployment documentation, and material accountability in support of military exercises including MAX-24 and Gunslinger 22.</li>
+        <li>Applied MDMP concepts, sustainment planning, and APS-5 frameworks to support operational logistics planning and readiness.</li>
+        <li>Utilized SAP Navy ERP and GCSS-MC to track, manage, and account for military property and logistics data.</li>
+        <li>Demonstrated operational discipline, mission focus, and procedural compliance essential to high-stakes military and government logistics environments.</li>
+        <li>Previously held Secret clearance for approximately five years; cleared to pursue reinstatement with organizational sponsorship.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-title">Logistics Coordinator</div>
+        <div class="exp-date">January 2026 – Present</div>
+      </div>
+      <div class="exp-company">Life Support International</div>
+      <div class="exp-loc">Langhorne, PA</div>
+      <ul class="exp-bullets">
+        <li>Coordinate inbound receiving, material inspection, and inventory routing for a logistics operation supporting safety-critical life-support product lines.</li>
+        <li>Apply material status classifications (R1, R2, Q2, Q3) to track and document inspection results and ensure proper product handling and flow.</li>
+        <li>Process pick tickets, manage supply orders, and support daily fulfillment operations with a focus on accuracy and procedural discipline.</li>
+        <li>Maintain organized warehouse stock and documentation to support operational continuity and compliance requirements.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-title">Screener — Freight & Cargo Operations</div>
+        <div class="exp-date">April 2025 – August 2025</div>
+      </div>
+      <div class="exp-company">DHL Global Forwarding</div>
+      <div class="exp-loc">Newark, NJ Area</div>
+      <ul class="exp-bullets">
+        <li>Performed cargo screening and compliance checks in a regulated global freight forwarding environment, ensuring shipment accuracy and adherence to security standards.</li>
+        <li>Maintained procedural compliance and documentation discipline across high-volume air freight and cargo operations.</li>
+        <li>Contributed to the accurate and timely movement of freight while upholding security protocols and operational standards.</li>
+      </ul>
+    </div>
+
+    <!-- Education -->
+    <div class="section-heading">Education</div>
+    <div class="edu-item">
+      <div class="edu-name">[College / University Name]</div>
+      <div class="edu-detail">Coursework — Business, Data Science, Mathematics &amp; Supply Chain Studies | [Start Year] – Present</div>
+    </div>
+
+    <!-- Additional -->
+    <div class="section-heading">Additional Information</div>
+    <div class="clearance-bar">Security Clearance: Previously held Secret clearance (~5 years) | Eligible for Sponsorship &amp; Reinstatement</div>
+    <div class="edu-item">
+      <div class="edu-name">Professional Development — In Progress / Planned</div>
+      <div class="edu-detail">DAU Logistics Coursework &nbsp;|&nbsp; Lean Six Sigma Yellow Belt &nbsp;|&nbsp; IATA Certification &nbsp;|&nbsp; SAP Training &nbsp;|&nbsp; Microsoft Excel (Advanced) &nbsp;|&nbsp; CAPM</div>
+    </div>
+
+  </div><!-- /resume-card -->
+</div><!-- /v2 -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SUPPORT MATERIALS
+═══════════════════════════════════════════════════════════════ -->
+<div id="support" class="section">
+  <div style="max-width:900px;margin:16px auto 4px;">
+    <span style="font-size:13px;color:#555;">LinkedIn, recruiter pitch, job titles, and ATS keywords</span>
+  </div>
+
+  <!-- LinkedIn About -->
+  <div class="materials-card">
+    <h2><span class="icon">in</span> LinkedIn "About" Section</h2>
+    <div class="linkedin-box">
+      <p>U.S. Marine Corps veteran and logistics professional with experience across military embarkation, defense contractor warehouse support, global freight operations, and civilian logistics coordination.</p>
+      <br>
+      <p>My background spans shipping and receiving, inventory control, cargo screening, order fulfillment, material handling, and documentation-driven logistics — developed through military service and applied in commercial and government environments. I have worked with SAP Navy ERP, GCSS-MC, and government logistics frameworks including ETIDS, DMSMS, and DRMO. I previously held a Secret security clearance and am eligible for reinstatement.</p>
+      <br>
+      <p>I bring the same discipline, attention to detail, and accountability that the Marine Corps instilled in me to every logistics operation I support. Whether it's coordinating material flow in a warehouse, screening freight for compliance, or tracking property in a defense environment — I show up ready, focused, and dependable.</p>
+      <br>
+      <p>Currently pursuing coursework in Business, Data Science, and Supply Chain studies, and working toward certifications in Lean Six Sigma, DAU logistics, and SAP.</p>
+      <br>
+      <p>Open to: Logistics Coordinator · Supply Chain Coordinator · Warehouse Specialist · Inventory Control · Government/Defense Logistics · Operations Support</p>
+      <br>
+      <p>📍 Philadelphia, PA Metro &nbsp;|&nbsp; 🎖️ Marine Corps Veteran &nbsp;|&nbsp; 🔐 Prior Secret Clearance</p>
+    </div>
+  </div>
+
+  <!-- Recruiter Pitch -->
+  <div class="materials-card">
+    <h2><span class="icon">🎯</span> Short Recruiter Pitch</h2>
+    <div class="pitch-box">
+      <p><strong>Use this for emails, LinkedIn InMail replies, or phone screens:</strong></p>
+      <br>
+      <p>"Hi [Name] — I'm a U.S. Marine Corps veteran and logistics professional based in the Philadelphia area. I've built my career across military logistics as an Embarkation &amp; Logistics Specialist, defense contractor warehouse support at NSWCPD through AdSync Technologies, cargo screening at DHL Global Forwarding, and logistics coordination at Life Support International. I have experience in inventory control, shipping and receiving, material handling, cargo screening, property accountability, and documentation-driven supply chain workflows. I previously held a Secret clearance and am open to roles requiring reinstatement. I'm looking for a logistics coordinator, supply chain, or warehouse role where I can contribute to an efficient, high-accountability team. Happy to share my resume if you have openings that could be a fit."</p>
+    </div>
+  </div>
+
+  <!-- Job Titles -->
+  <div class="materials-card">
+    <h2><span class="icon">🔍</span> Job Titles to Search</h2>
+    <p style="font-size:12px;color:#666;margin-bottom:2px;">Use these on Indeed, LinkedIn, USAJobs, ClearanceJobs, and defense contractor career portals:</p>
+    <div class="job-title-grid">
+      <span class="job-pill">Logistics Coordinator</span>
+      <span class="job-pill">Supply Chain Coordinator</span>
+      <span class="job-pill">Warehouse Specialist</span>
+      <span class="job-pill">Inventory Control Specialist</span>
+      <span class="job-pill">Material Handler</span>
+      <span class="job-pill">Warehouse Lead</span>
+      <span class="job-pill">Shipping & Receiving Clerk</span>
+      <span class="job-pill">Operations Coordinator</span>
+      <span class="job-pill">Transportation Coordinator</span>
+      <span class="job-pill">Logistics Analyst (Entry-Level)</span>
+      <span class="job-pill">Supply Chain Analyst</span>
+      <span class="job-pill">Logistics Specialist</span>
+      <span class="job-pill">Material Management Specialist</span>
+      <span class="job-pill">Government Logistics Specialist</span>
+      <span class="job-pill">Defense Logistics Coordinator</span>
+      <span class="job-pill">Property Accountability Specialist</span>
+      <span class="job-pill">Distribution Coordinator</span>
+      <span class="job-pill">Freight Coordinator</span>
+      <span class="job-pill">Supply Technician (GS-06/07)</span>
+      <span class="job-pill">Logistics Management Specialist</span>
+    </div>
+    <p style="font-size:12px;color:#888;margin-top:10px;"><strong>Defense boards to use:</strong> ClearanceJobs.com · USAJOBS.gov (filter: veteran preference) · LinkedIn (filter: entry-level, defense, logistics) · Indeed · Booz Allen · Leidos · SAIC · ManTech · PAE · AMSEC</p>
+  </div>
+
+  <!-- ATS Keywords -->
+  <div class="materials-card">
+    <h2><span class="icon">🗝️</span> ATS Resume Keywords</h2>
+    <p style="font-size:12px;color:#666;margin-bottom:2px;">Mirror these from job postings — insert the exact phrase when it matches your actual experience:</p>
+    <div class="keyword-grid">
+      <span class="keyword-pill">Logistics Coordination</span>
+      <span class="keyword-pill">Supply Chain Management</span>
+      <span class="keyword-pill">Warehouse Operations</span>
+      <span class="keyword-pill">Shipping and Receiving</span>
+      <span class="keyword-pill">Inventory Control</span>
+      <span class="keyword-pill">Cycle Counting</span>
+      <span class="keyword-pill">Order Fulfillment</span>
+      <span class="keyword-pill">Pick and Pack</span>
+      <span class="keyword-pill">Material Handling</span>
+      <span class="keyword-pill">Receiving Inspection</span>
+      <span class="keyword-pill">Property Accountability</span>
+      <span class="keyword-pill">Discrepancy Resolution</span>
+      <span class="keyword-pill">Cargo Screening</span>
+      <span class="keyword-pill">Freight Operations</span>
+      <span class="keyword-pill">Air Cargo</span>
+      <span class="keyword-pill">Transportation Coordination</span>
+      <span class="keyword-pill">Documentation Compliance</span>
+      <span class="keyword-pill">Government Logistics</span>
+      <span class="keyword-pill">Defense Logistics</span>
+      <span class="keyword-pill">Military Logistics</span>
+      <span class="keyword-pill">Embarkation</span>
+      <span class="keyword-pill">Sustainment Planning</span>
+      <span class="keyword-pill">DRMO</span>
+      <span class="keyword-pill">DMSMS</span>
+      <span class="keyword-pill">ETIDS</span>
+      <span class="keyword-pill">SAP</span>
+      <span class="keyword-pill">GCSS-MC</span>
+      <span class="keyword-pill">Secret Clearance</span>
+      <span class="keyword-pill">Veteran</span>
+      <span class="keyword-pill">MDMP</span>
+      <span class="keyword-pill">APS-5</span>
+      <span class="keyword-pill">Microsoft Excel</span>
+      <span class="keyword-pill">ERP Systems</span>
+      <span class="keyword-pill">Inventory Management</span>
+      <span class="keyword-pill">Material Management</span>
+      <span class="keyword-pill">Lean Operations</span>
+      <span class="keyword-pill">Compliance</span>
+      <span class="keyword-pill">SOPs</span>
+      <span class="keyword-pill">Attention to Detail</span>
+      <span class="keyword-pill">Cross-functional Collaboration</span>
+      <span class="keyword-pill">Asset Tracking</span>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#fffbe6;border-left:4px solid #f0b429;border-radius:0 4px 4px 0;font-size:12px;color:#555;line-height:1.6;">
+      <strong>Tip:</strong> Before submitting any application, copy the job posting into a text tool, find the top 8–10 phrases that repeat, and check that your resume uses that same language (where truthful). This is how you beat ATS filters without keyword stuffing.
+    </div>
+  </div>
+
+</div><!-- /support -->
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
