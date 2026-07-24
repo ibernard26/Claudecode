@@ -4,3 +4,6 @@ dist/
 .claude/settings.local.json
 tmp/
 .mcp.json
+
+# pe-tracker is an independent nested git repo (user's separate portfolio project)
+pe-tracker/
