@@ -65,7 +65,25 @@ All work: `claude/eloquent-pasteur-id8nr1` (PR #1 open)
 4. Distressed/rescue capital → fallen-angel software LBOs (NC:6 / AS:8)
 5. PFAS/water O&M, fire & life-safety inspection (mandated recurring) (NC:6–8 / AS:7–9)
 
+## Canonical strategy — LOCKED (`event_driven_v1`)
+The live research strategy is **event-driven / merger-arb deal-break scoring**,
+defined once in `pe-tracker/pe-tracker/STRATEGY.md` and pinned in
+`pe-tracker/pe-tracker/src/config.py`. Every loop cycle and every session runs
+this same contract — it must never differentiate run to run:
+- Positive class = the deal **breaks** (`y=1 ⇔ status='broken'`); pending deals
+  are **censored**, never negatives.
+- **Point-in-time**: a metric `as_of` D uses only deals resolved on/before D. No lookahead.
+- Graded with **both** ROC AUC (prevalence-invariant) and PR AUC **beside π**.
+- Operating point is **cost-based** (`t*`, FN:FP = 15:1), never 0.5.
+- Index momentum (`ma5_v1`) is **retired to a baseline** (no edge, p=0.44) — not a trade signal.
+- No fabrication: unpublished prints stay `n/d`, unresolved deals stay `pending`.
+
+`tests/test_strategy_contract.py` fails the build if any of these constants
+drift, so the strategy cannot silently diverge. Changing it requires bumping
+`STRATEGY_VERSION` + STRATEGY.md + the contract test in one commit.
+
 ## /daily-report command
 Run `/daily-report` to execute the full daily cycle:
-research → tracker update → spreadsheet update → commit/push.
+research → tracker update → spreadsheet update → **event-driven strategy layer
+(deal-break scorecard + workbook regen, per STRATEGY.md)** → commit/push.
 See `.claude/commands/daily-report.md` for the full spec.
