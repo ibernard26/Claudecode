@@ -51,3 +51,12 @@ Last canonical entry: June 5, 2026
 - `🟡` × cycle-number marks new rows
 - Durable vs noise label on every signal
 - Verifiable data only
+
+## pe-tracker integration (event-driven layer)
+After the tracker update, if `pe-tracker/pe-tracker/` exists:
+1. Update deal statuses in the `deals` table from the day's verified news
+   (status transitions only with a sourced resolution; pending stays pending).
+2. Run `python -m src.cli scorecard --group-by all` and append the JSON to the
+   day's brief under "Deal-Break Scorecard".
+3. Regenerate the workbook: `python generate_workbook.py` (Python formula gate
+   must report 0 failures) and commit both repos.
