@@ -1,0 +1,8 @@
+arb_intelligence:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ./data/warehouse.duckdb
+      schema: gold
+      threads: 4

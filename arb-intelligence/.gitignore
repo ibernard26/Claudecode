@@ -1,0 +1,13 @@
+data/*.duckdb
+data/*.duckdb.wal
+data/silver/*.parquet
+outputs/*.xlsx
+target/
+dbt_packages/
+logs/
+.venv/
+__pycache__/
+*.pyc
+local.db
+.env
+.user.yml

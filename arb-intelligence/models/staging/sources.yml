@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: silver_sources
+    schema: silver
+    description: >
+      Physical tables landed by scripts/migrate_sqlite_to_silver.py. These are
+      the typed, calendar-aware inputs to the dbt graph. dbt only reads them.
+    tables:
+      - name: stg_fred_prices
+        description: One row per series per observation date. raw_value is a true NULL when the source print was missing ('.').
+      - name: stg_nyse_calendar
+        description: One row per calendar date with is_trading and holiday_reason.
+      - name: silver_sat_deal
+        description: SCD2/Data-Vault-style deal satellite with hash_diff and valid_from/valid_to.

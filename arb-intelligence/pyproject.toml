@@ -1,0 +1,22 @@
+[project]
+name = "arb-intelligence"
+version = "0.1.0"
+description = "Merger-arbitrage research data estate: DuckDB + dbt + Dagster"
+requires-python = ">=3.10"
+dependencies = [
+    "duckdb>=0.10.0",
+    "dbt-core>=1.7.0",
+    "dbt-duckdb>=1.7.0",
+    "dagster>=1.6.0",
+    "dagster-dbt>=0.22.0",
+    "requests>=2.31.0",
+    "openpyxl>=3.1.2",
+    "pydantic>=2.5.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["orchestrator"]
